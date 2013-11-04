@@ -31,7 +31,7 @@ function addNewTask(){
 	var date = $('#taskDate').val();
 	var task=new Object();
 	task.name=name;
-	task.date=date;
+	task.deadline=date;
 	console.log($.toJSON(task));
 	tasks.push(task);
 	
