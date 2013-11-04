@@ -13,6 +13,39 @@
 <input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
 <input type="text" id="taskDate" value="22/10" />
 
+<script>
+
+function addNewTask(){
+	var name = $('#taskName').val();
+	var date = $('#taskDate').val();
+	var task=new Object();
+	task.name=name;
+	task.date=date;
+	console.log($.toJSON(task));
+	tasks.push(task);
+}
+
+function isEnter(e,preventDefault){
+	if (e.which == '13') {
+		if(preventDefault){
+			e.preventDefault();
+		}
+		return true;
+   }
+   return false;
+}
+
+$('#taskName').keypress(function(e){
+	if(isEnter(e,true)){
+		addNewTask();
+	}
+});
+$('#taskDate').keypress(function(e){
+	if(isEnter(e,true)){
+		addNewTask();
+	}
+});
+</script>
 </div>
 </body>
 </html>
