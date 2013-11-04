@@ -13,7 +13,18 @@
 <input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
 <input type="text" id="taskDate" value="22/10" />
 
+<input type="button" onclick="sessionStorage.setItem('tasks',undefined);" value="clear tasks"/>
+<input type="button" onclick="sessionStorage.clear();" value="Clear all sessionStorage"/>
+
 <script>
+var tasksString = sessionStorage.getItem('tasks');
+var tasks = 'undefined' == tasksString || null == tasksString? []:$.parseJSON(tasksString);
+
+if (Modernizr.localstorage) {
+	console.log("localstorage is available");
+} else {
+  console.log("localstorage is NOT ------------available");
+}
 
 function addNewTask(){
 	var name = $('#taskName').val();
@@ -23,6 +34,8 @@ function addNewTask(){
 	task.date=date;
 	console.log($.toJSON(task));
 	tasks.push(task);
+	
+	sessionStorage.setItem('tasks',$.toJSON(tasks));
 }
 
 function isEnter(e,preventDefault){
