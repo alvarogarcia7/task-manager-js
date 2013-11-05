@@ -13,6 +13,7 @@
 
 <input type="button" onclick="sessionStorage.setItem('tasks',undefined);" value="clear tasks"/>
 <input type="button" onclick="sessionStorage.clear();" value="Clear all sessionStorage"/>
+</div>
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
@@ -20,8 +21,10 @@
 <script src="../js/common-functions.js"></script>
 
 <script>
+var tasks;
+$(document).ready(function(){
 var tasksString = sessionStorage.getItem('tasks');
-var tasks = 'undefined' == tasksString || null == tasksString? []:$.parseJSON(tasksString);
+tasks = 'undefined' == tasksString || null == tasksString? []:$.parseJSON(tasksString);
 
 if (Modernizr.localstorage) {
 	console.log("localstorage is available");
@@ -51,8 +54,9 @@ $('#taskDate').keypress(function(e){
 		addNewTask();
 	}
 });
+});
 </script>
-</div>
+
 </body>
 </html>
 
