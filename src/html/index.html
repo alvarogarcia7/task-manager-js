@@ -1,9 +1,7 @@
 <html>
 
 <head>
-<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
-<script src="../js/modernizr.js"></script>
+
 </head>
 
 <body>
@@ -15,6 +13,11 @@
 
 <input type="button" onclick="sessionStorage.setItem('tasks',undefined);" value="clear tasks"/>
 <input type="button" onclick="sessionStorage.clear();" value="Clear all sessionStorage"/>
+
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
+<script src="../js/modernizr.js"></script>
+<script src="../js/common-functions.js"></script>
 
 <script>
 var tasksString = sessionStorage.getItem('tasks');
@@ -36,16 +39,6 @@ function addNewTask(){
 	tasks.push(task);
 	
 	sessionStorage.setItem('tasks',$.toJSON(tasks));
-}
-
-function isEnter(e,preventDefault){
-	if (e.which == '13') {
-		if(preventDefault){
-			e.preventDefault();
-		}
-		return true;
-   }
-   return false;
 }
 
 $('#taskName').keypress(function(e){
