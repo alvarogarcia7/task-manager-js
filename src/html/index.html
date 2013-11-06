@@ -8,12 +8,18 @@
 
 <div>
 
+<script>
+var contentStd ={
+ tasks:[],
+ };
+ </script>
+
 <input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
 <input type="text" id="taskDate" value="22/10" />
 
-<input type="button" onclick="sessionStorage.setItem('tasks',undefined);" value="clear tasks"/>
+<input type="button" onclick="sessionStorage.setItem('content',$.toJSON(contentStd));" value="clear tasks"/>
 <input type="button" onclick="sessionStorage.clear();" value="Clear all sessionStorage"/>
-<input type="button" onclick="javascript:console.log(tasks);" value="View tasks in console.log"/>
+<input type="button" onclick="javascript:console.log(content.tasks);" value="View tasks in console.log"/>
 </div>
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
@@ -26,13 +32,15 @@
 <script src="http://www.jsviews.com/download/jsviews.js"></script>
 
 <script>
-var tasks;
+var content;
 $(document).ready(function(){
-var tasksString = sessionStorage.getItem('tasks');
-tasks = 'undefined' == tasksString || null == tasksString? []:$.parseJSON(tasksString);
+
+var contentString = sessionStorage.getItem('content');
+content = null==contentString?contentStd:$.parseJSON(contentString);
+
 
 if (Modernizr.localstorage) {
-	console.log("localstorage is available");
+	console.log("localstorage is available. content="+$.toJSON(content));
 } else {
   console.log("localstorage is NOT ------------available");
 }
@@ -44,9 +52,21 @@ function addNewTask(){
 	task.name=name;
 	task.deadline=date;
 	console.log($.toJSON(task));
-	tasks.push(task);
+	content.tasks.push(task);
 	
-	sessionStorage.setItem('tasks',$.toJSON(tasks));
+	console.log("init");
+	console.log(content.tasks);
+	
+	saveContent();
+}
+
+function saveContent(){
+	saveToSession('content',$.toJSON(content));
+}
+
+
+function saveToSession(name,data){
+	sessionStorage.setItem(name,data);
 }
 
 $('#taskName').keypress(function(e){
@@ -59,30 +79,8 @@ $('#taskDate').keypress(function(e){
 		addNewTask();
 	}
 });
-});
-</script>
 
-<div id="result"></div>
 
-<script id="theTmpl" type="text/x-jsrender">
-<div>
-  Edit: <input type="checkbox" data-link="editable"/>
-  <em>Name:</em> {^{:name}}}
-  {^{if showNickname && nickname}}
-    (Goes by <em data-link="nickname"></em>)
-  {{/if}}
-  {^{if editable}}
-    <div>
-      <input data-link="name"/>
-      <input data-link="nickname"/>
-      <input type="checkbox" data-link="showNickname"/>
-    </div>
-  {{/if}}
-</div>
-
-</script>
-
-<script>
 var data = [
   {
     "name": "Robert",
@@ -96,9 +94,42 @@ var data = [
   }
 ];
 
-var template = $.templates("#theTmpl");
+	$.templates("#taskTemplate").link("#result", content)
+		.on("click", ".remove", function() {
+			var view = $.view(this);
+			console.log(content);
+			console.log(view.index);
+			$.observable(content.tasks).remove(view.index);
+			saveContent();
+		})
+		  .on("click", "#add", function() {
+			$.observable(content.tasks).insert(content.tasks.length, {name: "new" + content.tasks.length});
+			saveContent();
+		  });
+});
+</script>
 
-template.link("#result", data);
+<div id="result"></div>
+
+<script id="taskTemplate" type="text/x-jsrender">
+<div>
+  <div class="buttons">
+  <button id="add">Add</button>
+</div>
+<ol>
+  {^{for tasks}}
+    <li>
+      {^{:name}} 
+      <img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
+    </li>
+  {{/for}}
+</ol>
+</div>
+
+</script>
+
+<script>
+
 </script>
 
 </body>
