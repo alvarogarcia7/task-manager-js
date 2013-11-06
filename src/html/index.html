@@ -21,6 +21,10 @@
 <script src="../js/modernizr.js"></script>
 <script src="../js/common-functions.js"></script>
 
+
+<link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/>
+<script src="http://www.jsviews.com/download/jsviews.js"></script>
+
 <script>
 var tasks;
 $(document).ready(function(){
@@ -56,6 +60,45 @@ $('#taskDate').keypress(function(e){
 	}
 });
 });
+</script>
+
+<div id="result"></div>
+
+<script id="theTmpl" type="text/x-jsrender">
+<div>
+  Edit: <input type="checkbox" data-link="editable"/>
+  <em>Name:</em> {^{:name}}}
+  {^{if showNickname && nickname}}
+    (Goes by <em data-link="nickname"></em>)
+  {{/if}}
+  {^{if editable}}
+    <div>
+      <input data-link="name"/>
+      <input data-link="nickname"/>
+      <input type="checkbox" data-link="showNickname"/>
+    </div>
+  {{/if}}
+</div>
+
+</script>
+
+<script>
+var data = [
+  {
+    "name": "Robert",
+    "nickname": "Bob",
+    "showNickname": true
+  },
+  {
+    "name": "Susan",
+    "nickname": "Sue",
+    "showNickname": false
+  }
+];
+
+var template = $.templates("#theTmpl");
+
+template.link("#result", data);
 </script>
 
 </body>
