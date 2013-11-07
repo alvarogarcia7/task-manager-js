@@ -1,10 +1,135 @@
 <html>
 
 <head>
-<script type="javascript" src="http://code.jquery.com/jquery-2.0.3.min.js">
+
 </head>
 
 <body>
+
+<div>
+
+<script>
+var contentStd ={
+ tasks:[],
+ };
+ </script>
+
+<input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
+<input type="text" id="taskDate" value="22/10" />
+
+<input type="button" onclick="sessionStorage.setItem('content',$.toJSON(contentStd));removeAll()" value="clear tasks"/>
+<!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
+<input type="button" onclick="javascript:console.log(content.tasks);" value="View tasks in console.log"/>
+</div>
+
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
+<script src="../../lib/modernizr/modernizr.js"></script>
+<script src="../js/common-functions.js"></script>
+
+
+<link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/>
+<script src="http://www.jsviews.com/download/jsviews.js"></script>
+
+<script>
+function removeAll(){
+	$.each(content.tasks,function(index,data){
+		$.observable(content.tasks).remove(0);
+	});
+}
+
+var content;
+$(document).ready(function(){
+
+var contentString = sessionStorage.getItem('content');
+content = null==contentString?contentStd:$.parseJSON(contentString);
+
+
+if (Modernizr.localstorage) {
+	console.log("localstorage is available. content="+$.toJSON(content));
+} else {
+  console.log("localstorage is NOT available");
+}
+
+function addNewTask(){
+	$('#add').click();
+}
+
+function saveContent(){
+	saveToSession('content',$.toJSON(content));
+}
+
+
+function saveToSession(name,data){
+	sessionStorage.setItem(name,data);
+}
+
+$('#taskName').keypress(function(e){
+	if(isEnter(e,true)){
+		addNewTask();
+	}
+});
+$('#taskDate').keypress(function(e){
+	if(isEnter(e,true)){
+		addNewTask();
+	}
+});
+
+
+var data = [
+  {
+    "name": "Robert",
+    "nickname": "Bob",
+    "showNickname": true
+  },
+  {
+    "name": "Susan",
+    "nickname": "Sue",
+    "showNickname": false
+  }
+];
+
+updateView();
+
+function updateView(){
+	$.templates("#taskTemplate").link("#result", content)
+		.on("click", ".remove", function() {
+			var view = $.view(this);
+			console.log(content);
+			console.log(view.index);
+			$.observable(content.tasks).remove(view.index);
+			saveContent();
+		})
+		  .on("click", "#add", function() {
+		  
+			var task=new Object();
+			task.name=$('#taskName').val();
+			task.deadline=$('#taskDate').val();
+			$.observable(content.tasks).insert(content.tasks.length, task);
+			saveContent();
+		  });
+}
+});
+</script>
+
+<div id="result"></div>
+
+<script id="taskTemplate" type="text/x-jsrender">
+<div>
+  <div class="buttons">
+  <button id="add">Add</button>
+</div>
+<ol>
+  {^{for tasks}}
+    <li>
+      <img class="remove" src="http://www.jsviews.com/resources/images/close.png" /> {^{:name}} 
+    </li>
+  {{/for}}
+</ol>
+</div>
+
+</script>
+
 </body>
 </html>
 
