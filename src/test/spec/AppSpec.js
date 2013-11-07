@@ -1,0 +1,123 @@
+describe("App", function() {
+  var app;
+
+  beforeEach(function() {
+    app = new App();
+    expectStorageIsEmpty();
+  });
+
+  afterEach(function () {
+    app.removeAll();
+  });
+
+  it("clean storage from previous usage", function () {
+    app.removeAll();
+  })
+
+
+	it("variable app should exist", function() {
+		expect(undefined == app).toBeFalsy();
+	});
+  
+	it("tasks should be empty", function() {
+		expect(app.tasks).toEqual([]);
+	});
+  
+	it("basic author", function() {
+		expect(app.author).toEqual("me");
+	});
+
+	it("clear session storage", function() {
+    add1Task();
+    clearTasksAndStorage();
+	});
+
+  function clearTasksAndStorage () {
+    app.removeAll();
+    expect(app.tasks.length).toEqual(0);
+    expectStorageIsEmpty();
+  }
+
+  it("save to session storage", function () {
+    expectStorageIsEmpty();
+    add1Task();
+    expectStorageIsNotEmpty(1);
+    add1Task();
+    expectStorageIsNotEmpty(2);
+    add1Task();
+    expectStorageIsNotEmpty(3);
+  }); 
+
+  function expectStorageIsEmpty(){
+
+    var a=app.loadFromSession(app.storageName);
+    expect( a == null || a==$.toJSON(new App())).toBe(true);
+  }
+
+  function expectStorageIsNotEmpty(taskSize){
+    var appString = app.loadFromSession(app.storageName);
+    console.log(appString);
+    expect(appString).not.toBe(null);
+    expect(appString).not.toBe(undefined);
+
+    if(undefined != taskSize){
+        var storageApp = $.parseJSON(appString);
+        console.log(storageApp);
+        console.log(taskSize);
+        expect(storageApp.tasks.length).toBe(taskSize);
+    }
+  }
+
+  function add1Task () {
+    var previousTaskNumber = app.tasks.length;
+    expect(previousTaskNumber >= 0).toBe(true);
+    app.add(new Object());
+
+    var newTaskNumber = previousTaskNumber+1;
+    expect(app.tasks.length).toEqual(newTaskNumber);
+    expect(newTaskNumber > 0).toBe(true);
+
+  }
+/*
+  describe("when song has been paused", function() {
+    beforeEach(function() {
+      app.play(song);
+      app.pause();
+    });
+
+    it("should indicate that the song is currently paused", function() {
+      expect(app.isPlaying).toBeFalsy();
+
+      // demonstrates use of 'not' with a custom matcher
+      expect(app).not.toBePlaying(song);
+    });
+
+    it("should be possible to resume", function() {
+      app.resume();
+      expect(app.isPlaying).toBeTruthy();
+      expect(app.currentlyPlayingSong).toEqual(song);
+    });
+  });
+
+  // demonstrates use of spies to intercept and test method calls
+  it("tells the current song if the user has made it a favorite", function() {
+    spyOn(song, 'persistFavoriteStatus');
+
+    app.play(song);
+    app.makeFavorite();
+
+    expect(song.persistFavoriteStatus).toHaveBeenCalledWith(true);
+  });
+
+  //demonstrates use of expected exceptions
+  describe("#resume", function() {
+    it("should throw an exception if song is already playing", function() {
+      app.play(song);
+
+      expect(function() {
+        app.resume();
+      }).toThrow("song is already playing");
+    });
+  });
+  */
+});
