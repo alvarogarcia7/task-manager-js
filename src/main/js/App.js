@@ -1,17 +1,25 @@
-function App() {
-	this.tasks=[];
-	this.author="me";
-	this.storageName='content';
-}
 
+var App = function() {
+	var self = this;
+	self.tasks=ko.observableArray([]);
+	
+	self.author=ko.observable("me");
+	self.storageName='content';
+
+
+	self.add = function(task){
+		
+		self.tasks.push(task);
+		this.persist();
+	};
+
+	self.add({name:"task 1", deadline:"today"});
+}
 App.prototype.pause = function() {
   this.isPlaying = false;
 };
 
-App.prototype.add = function(task){
-	this.tasks.push(task);
-	this.persist();
-};
+
 
 App.prototype.persist = function() {
 	this.saveToSession(this.storageName,$.toJSON(this));
