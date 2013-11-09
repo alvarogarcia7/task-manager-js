@@ -7,8 +7,10 @@ var Task = function(name,deadline){
 
 
 var App = function() {
-	var idCounter =0;
+	
 	var self = this;
+
+	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
 	this.currentItem = ko.observable(new Task("comprar pan","maNana"));
@@ -18,8 +20,10 @@ var App = function() {
 
 
 	self.add = function(task){
-		task.id=idCounter;
-		idCounter++;
+		if(undefined == task.id){
+			task.id=self.idCounter;
+			self.idCounter++;
+		}
 		self.tasks.push(task);
 
 		console.log("self.tasks()=");
@@ -39,6 +43,11 @@ var App = function() {
         if(persist){
 	        self.persist();
 	    }
+    };
+
+    self.editTask = function(task) {
+    	self.currentItem(task);
+    	self.removetask(task);
     };
 
 self.removeAll = function(){
@@ -66,6 +75,7 @@ self.copyFrom = function(string) {
 	}
 
 	self.tasks(newApp.tasks);
+	self.idCounter = newApp.idCounter;
 
 	return self;
 
@@ -96,7 +106,7 @@ App.prototype.retrieveFromStorage = function (){
 		console.log("retrieveFromStorage :: "+appStorage);
 
 		if(undefined != appStorage){
-			this.copyFrom(appStorage);
+			self = this.copyFrom(appStorage);
 		}
 
 	}

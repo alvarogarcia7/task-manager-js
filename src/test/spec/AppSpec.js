@@ -52,7 +52,11 @@ describe("App", function() {
 
     var a=app.loadFromSession(app.storageName);
     console.log("expectStorageIsEmptyOrLikeNew "+a);
-    expect(a==null || a==ko.toJSON(new App())).toBe(true);
+    var app2 = new App();
+    app2 = app2.copyFrom(a);
+    console.log("expectStorageIsEmptyOrLikeNew => ");
+    console.log(app2.tasks());
+    expect(a==null || app2.tasks().length==0 ).toBe(true);
   }
 
   function expectStorageIsNotEmpty(taskSize){
