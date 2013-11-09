@@ -20,11 +20,11 @@ describe("App", function() {
 	});
   
 	it("tasks should be empty", function() {
-		expect(app.tasks).toEqual([]);
+		expect(app.tasks()).toEqual([]);
 	});
   
 	it("basic author", function() {
-		expect(app.author).toEqual("me");
+		expect(app.author()).toEqual("me");
 	});
 
 	it("clear session storage", function() {
@@ -51,30 +51,31 @@ describe("App", function() {
   function expectStorageIsEmpty(){
 
     var a=app.loadFromSession(app.storageName);
-    expect( a == null || a==$.toJSON(new App())).toBe(true);
+    console.log("expectStorageIsEmptyOrLikeNew "+a);
+    expect(a==null || a==ko.toJSON(new App())).toBe(true);
   }
 
   function expectStorageIsNotEmpty(taskSize){
     var appString = app.loadFromSession(app.storageName);
-    console.log(appString);
+    console.log("appstring = "+appString);
     expect(appString).not.toBe(null);
     expect(appString).not.toBe(undefined);
 
     if(undefined != taskSize){
-        var storageApp = $.parseJSON(appString);
+        var storageApp = app.copyFrom(appString);
         console.log(storageApp);
         console.log(taskSize);
-        expect(storageApp.tasks.length).toBe(taskSize);
+        expect(storageApp.tasks().length).toBe(taskSize);
     }
   }
 
   function add1Task () {
-    var previousTaskNumber = app.tasks.length;
+    var previousTaskNumber = app.tasks().length;
     expect(previousTaskNumber >= 0).toBe(true);
     app.add(new Object());
 
     var newTaskNumber = previousTaskNumber+1;
-    expect(app.tasks.length).toEqual(newTaskNumber);
+    expect(app.tasks().length).toEqual(newTaskNumber);
     expect(newTaskNumber > 0).toBe(true);
 
   }

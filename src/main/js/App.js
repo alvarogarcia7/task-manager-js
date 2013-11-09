@@ -2,10 +2,12 @@ var Task = function(name,deadline){
 	var self = this;
 	self.name = name;
 	self.deadline = deadline;
+	self.id=0;
 };
 
 
 var App = function() {
+	var idCounter =0;
 	var self = this;
 	self.tasks=ko.observableArray([]);
 
@@ -16,38 +18,57 @@ var App = function() {
 
 
 	self.add = function(task){
+		task.id=idCounter;
+		idCounter++;
 		self.tasks.push(task);
+
+		console.log("self.tasks()=");
+		console.log(self.tasks());
 		this.persist();
 	};
 	
-	self.add(new Task("task 1","today"));
+	//self.add(new Task("task 1","today"));
 
 
 	 self.removetask = function(task,persist) {
-    	console.log("pasa removetask");
-    	console.log(self.tasks());
+    	//console.log("pasa removetask");
+    	//console.log(task);
+    	//console.log(self.tasks());
         self.tasks.remove(task);
-        console.log(self.tasks());
+        //console.log(self.tasks());
         if(persist){
 	        self.persist();
 	    }
     };
 
 self.removeAll = function(){
-	$.each(this.tasks(), function(index,data){
-		self.removetask(data, false);
-	});
+	console.log("removeAll. tasks().length="+this.tasks().length);
+	var i =0;
+	//console.log(this.tasks());
+	for (var i = this.tasks().length - 1; i >= 0; i--) {
+		self.removetask(this.tasks()[i]);
+	};
+
+	//console.log("deleted "+i+" items");
+	//console.log(this.tasks());
 	this.persist();
+	//console.log(this.tasks());
 }
 
-self.copyFrom = function(object) {
+self.copyFrom = function(string) {
+	var object = ko.toJS(string);
+	var newApp = $.parseJSON(string);
 	for (var attr in object) {
-		//if (object.hasOwnProperty(attr)) this[attr] = object[attr];
-		if (object.hasOwnProperty(attr) || typeof attr == 'function'){
-			this[attr] = object[attr];
+		//if (object.hasOwnProperty(attr)) {
+		if (self.hasOwnProperty(attr) || typeof attr == 'function'){
+			self[attr] = object[attr];
 		}
-
 	}
+
+	self.tasks(newApp.tasks);
+
+	return self;
+
 };
 
 };
@@ -75,7 +96,7 @@ App.prototype.retrieveFromStorage = function (){
 		console.log("retrieveFromStorage :: "+appStorage);
 
 		if(undefined != appStorage){
-			this.copyFrom($.parseJSON(appStorage));
+			this.copyFrom(appStorage);
 		}
 
 	}
@@ -89,6 +110,10 @@ App.prototype.saveToSession = function(name,data){
 	localStorage.setItem(name,data);
 }
 
+App.prototype.addDummyData =function(){
+	this.add(new Task("task 1","today"));
+	this.currentItem(new Task("comprar pan","maNana"));
+};
 
 /*
 var AppModel = function(app) {

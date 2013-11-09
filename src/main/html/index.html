@@ -4,19 +4,12 @@
 
 <div>
 
-<script>
-var contentStd ={
- tasks:[],
- };
- </script>
-
-
 
 <input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
 <input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
 
 
-<input type="button" id="removedAll" name="removedAll" value="clear tasks NOT WORKING"/>
+<input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
 <!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
 <input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
 
@@ -109,7 +102,7 @@ function updateView(){
     
     <form >
         <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
-        <p>You have asked for <span data-bind='text: $.toJSON(tasks())'>&nbsp;</span> task(s)</p>
+        
         <table >
             <thead>
                 <tr>
@@ -123,7 +116,7 @@ function updateView(){
                     <td><input class='required' data-bind='value: name' /></td>
                     <td><input class='required number' data-bind='value: deadline' /></td>
                 <!--    <td><a href='#' data-bind='click: function(data, event){ /*console.log(data); */console.log($root); $root.removetask};'>Delete</a></td>-->
-				<td><a href='#' data-bind='click: $root.removetask'>Delete</a></td>
+				<td><a class="deleteTask" href='#' data-bind='click: $root.removetask'>Delete</a></td>
 
                 </tr>
             </tbody>
@@ -138,6 +131,7 @@ function updateView(){
         	 Add task</button>
         <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
     </form>
+    <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
     
 </div>
 
@@ -147,7 +141,8 @@ $(document).ready(function(){
 
 
  viewModel = new App();
-ko.applyBindings(viewModel);
+ //viewModel.addDummyData();
+ ko.applyBindings(viewModel);
 });
 
 </script>
