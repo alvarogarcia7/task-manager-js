@@ -65,6 +65,35 @@ App.prototype.saveToSession = function(name,data){
 	localStorage.setItem(name,data);
 }
 
+
+
+var AppModel = function(tasks) {
+    var self = this;
+    self.tasks = ko.observableArray(tasks);
+ 
+    self.addtask = function() {
+        self.tasks.push({
+            name: "",
+            deadline: ""
+        });
+    };
+ 
+    self.removetask = function(task) {
+        self.tasks.remove(task);
+    };
+ 
+    self.save = function(form) {
+        alert("Could now transmit to server: " + ko.utils.stringifyJson(self.tasks));
+        // To actually transmit to server as a regular form post, write this: ko.utils.postJson($("form")[0], self.tasks);
+    };
+};
+ 
+
+ 
+// Activate jQuery Validation
+$(document).ready(function(){
+//$("form").validate({ submitHandler: viewModel.save });
+});
 /*
 Object.prototype.clone = function() {
   if(this.cloneNode) return this.cloneNode(true);

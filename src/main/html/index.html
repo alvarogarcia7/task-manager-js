@@ -1,9 +1,5 @@
 <html>
 
-<head>
-
-</head>
-
 <body>
 
 <div>
@@ -19,8 +15,18 @@ var contentStd ={
 
 <input type="button" id="removedAll" name="removedAll" value="clear tasks"/>
 <!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
-<input type="button" onclick="javascript:console.log(app.tasks);" value="View tasks in console.log"/>
-</div>
+<input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
+
+
+
+<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.0.0.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/cufon-yui.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/titilliummaps.font.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/json2.js"></script>
+
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shCore.js"></script> 
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script> 
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script> 
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
@@ -29,33 +35,32 @@ var contentStd ={
 <script src="../js/App.js"></script>
 
 
-<link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/>
-<script src="http://www.jsviews.com/download/jsviews.js"></script>
-
 <script>
+/*
 var app = new App();
 app.retrieveFromStorage();
+*/
 
-
-var content;
+var viewModel;
 $(document).ready(function(){
-
-function addNewTask(){
-	$('#add').click();
-}
 
 $('#taskName').keypress(function(e){
 	if(isEnter(e,true)){
-		addNewTask();
+		viewModel.addtask();
 	}
 });
+/*
 $('#taskDate').keypress(function(e){
 	if(isEnter(e,true)){
 		addNewTask();
 	}
 });
+*/
 
 
+
+
+/*
 updateView();
 
 function updateView(){
@@ -90,26 +95,50 @@ function updateView(){
 
 		  });
 }
+*/
 });
+
 </script>
 
-<div id="result"></div>
-
-<script id="taskTemplate" type="text/x-jsrender">
-<div>
-  <div class="buttons">
-  <button id="add">Add</button>
+<img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
+<div class='liveExample'> 
+    
+    <form >
+        <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
+        <table data-bind='visible: tasks().length > 0'>
+            <thead>
+                <tr>
+                    <th>task name</th>
+                    <th>deadline</th>
+                    <th />
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: tasks'>
+                <tr>
+                    <td><input class='required' data-bind='value: name, uniqueName: true' /></td>
+                    <td><input class='required number' data-bind='value: deadline, uniqueName: true' /></td>
+                    <td><a href='#' data-bind='click: $root.removetask'>Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+     
+        <button data-bind='click: addtask'>Add task</button>
+        <button data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+    </form>
+    
 </div>
-<ol>
-  {^{for tasks}}
-    <li>
-      <img class="remove" src="http://www.jsviews.com/resources/images/close.png" /> {^{:name}} 
-    </li>
-  {{/for}}
-</ol>
-</div>
 
-<button id="removeAll"> clear all</button>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+
+ viewModel = new AppModel([
+    { name: "Tall Hat", deadline: "39.95"},
+    { name: "Long Cloak", deadline: "120.00"}
+]);
+ko.applyBindings(viewModel);
+});
 
 </script>
 
