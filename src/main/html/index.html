@@ -122,7 +122,9 @@ function updateView(){
                 <tr>
                     <td><input class='required' data-bind='value: name' /></td>
                     <td><input class='required number' data-bind='value: deadline' /></td>
-                    <td><a href='#' data-bind='click: $root.removetask'>Delete</a></td>
+                <!--    <td><a href='#' data-bind='click: function(data, event){ /*console.log(data); */console.log($root); $root.removetask};'>Delete</a></td>-->
+				<td><a href='#' data-bind='click: $root.removetask'>Delete</a></td>
+
                 </tr>
             </tbody>
         </table>

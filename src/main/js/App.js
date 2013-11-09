@@ -22,6 +22,14 @@ var App = function() {
 	
 	self.add(new Task("task 1","today"));
 
+
+	 self.removetask = function(task) {
+    	console.log("pasa removetask");
+    	console.log(self.tasks());
+        self.tasks.remove(task);
+        console.log(self.tasks());
+    };
+
 }
 App.prototype.pause = function() {
   this.isPlaying = false;
@@ -79,16 +87,13 @@ App.prototype.saveToSession = function(name,data){
 }
 
 
-
+/*
 var AppModel = function(app) {
     var self = this;
 
-    //console.log(app);
     self.app = ko.observable(app);
-    //console.log(self.app().tasks);
  
     self.addTask = function() {
-   
          self.app().add({
             name: "",
             deadline: ""
@@ -96,7 +101,10 @@ var AppModel = function(app) {
     };
  
     self.removetask = function(task) {
-        self.tasks.remove(task);
+    	console.log("pasa removetask");
+    	console.log(self.app());
+        self.app().tasks.remove(task);
+        console.log(self.app());
     };
  
     self.save = function(form) {
@@ -104,6 +112,7 @@ var AppModel = function(app) {
         // To actually transmit to server as a regular form post, write this: ko.utils.postJson($("form")[0], self.tasks);
     };
 };
+*/
  
 
 /*
