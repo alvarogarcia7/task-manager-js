@@ -9,24 +9,19 @@ var App = function() {
 	var self = this;
 	self.tasks=ko.observableArray([]);
 
-	self.currentItem= undefined;
+	this.currentItem = ko.observable(new Task("comprar pan","maNana"));
 	
 	self.author=ko.observable("me");
 	self.storageName='content';
 
 
 	self.add = function(task){
-		
 		self.tasks.push(task);
 		this.persist();
 	};
-
-	self.setCurrentItem = function(task){
-		this.currentItem = ko.observable(task);
-	}
-
+	
 	self.add(new Task("task 1","today"));
-	self.setCurrentItem(new Task("comprar pan","maNana"));
+
 }
 App.prototype.pause = function() {
   this.isPlaying = false;
