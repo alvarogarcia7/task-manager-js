@@ -10,8 +10,11 @@ var contentStd ={
  };
  </script>
 
-<input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
-<input type="text" id="taskDate" value="22/10" />
+
+
+<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
+<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
+
 
 <input type="button" id="removedAll" name="removedAll" value="clear tasks NOT WORKING"/>
 <!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
@@ -46,16 +49,17 @@ $(document).ready(function(){
 
 $('#taskName').keypress(function(e){
 	if(isEnter(e,true)){
-		viewModel.add();
+
+		$('#addButton').click();
 	}
 });
-/*
+
 $('#taskDate').keypress(function(e){
 	if(isEnter(e,true)){
-		addNewTask();
+
+		$('#addButton').click();
 	}
 });
-*/
 
 
 
@@ -123,8 +127,14 @@ function updateView(){
             </tbody>
         </table>
      
-        <button data-bind='click: add({"name":"a","deadline":"b"})'>Add task</button>
-        <button data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+        <button id="addButton" data-bind='click: function(data,event){
+        		var currentItem = data.currentItem();
+        		console.log(currentItem);
+        	  add(currentItem);
+        	   data.currentItem(new Task("",""));
+        	};'>
+        	 Add task</button>
+        <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
     </form>
     
 </div>

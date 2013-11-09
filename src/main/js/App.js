@@ -1,7 +1,15 @@
+var Task = function(name,deadline){
+	var self = this;
+	self.name = name;
+	self.deadline = deadline;
+};
+
 
 var App = function() {
 	var self = this;
 	self.tasks=ko.observableArray([]);
+
+	self.currentItem= undefined;
 	
 	self.author=ko.observable("me");
 	self.storageName='content';
@@ -13,7 +21,12 @@ var App = function() {
 		this.persist();
 	};
 
-	self.add({name:"task 1", deadline:"today"});
+	self.setCurrentItem = function(task){
+		this.currentItem = ko.observable(task);
+	}
+
+	self.add(new Task("task 1","today"));
+	self.setCurrentItem(new Task("comprar pan","maNana"));
 }
 App.prototype.pause = function() {
   this.isPlaying = false;
@@ -80,8 +93,8 @@ var AppModel = function(app) {
     //console.log(self.app().tasks);
  
     self.addTask = function() {
-    	console.log("pasa addTask");
-        self.app().add({
+   
+         self.app().add({
             name: "",
             deadline: ""
         });
