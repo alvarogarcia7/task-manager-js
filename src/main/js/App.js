@@ -23,22 +23,39 @@ var App = function() {
 	self.add(new Task("task 1","today"));
 
 
-	 self.removetask = function(task) {
+	 self.removetask = function(task,persist) {
     	console.log("pasa removetask");
     	console.log(self.tasks());
         self.tasks.remove(task);
         console.log(self.tasks());
+        if(persist){
+	        self.persist();
+	    }
     };
 
+self.removeAll = function(){
+	$.each(this.tasks(), function(index,data){
+		self.removetask(data, false);
+	});
+	this.persist();
 }
-App.prototype.pause = function() {
-  this.isPlaying = false;
+
+self.copyFrom = function(object) {
+	for (var attr in object) {
+		//if (object.hasOwnProperty(attr)) this[attr] = object[attr];
+		if (object.hasOwnProperty(attr) || typeof attr == 'function'){
+			this[attr] = object[attr];
+		}
+
+	}
+};
+
 };
 
 
-
 App.prototype.persist = function() {
-	this.saveToSession(this.storageName,$.toJSON(this));
+	console.log("pasa persist");
+	this.saveToSession(this.storageName,ko.toJSON(this));
 };
 
 App.prototype.isLocalStorageAvailable = function(){
@@ -61,20 +78,6 @@ App.prototype.retrieveFromStorage = function (){
 			this.copyFrom($.parseJSON(appStorage));
 		}
 
-	}
-};
-
-App.prototype.removeAll = function(){
-	if(undefined!=this.tasks){
-		this.tasks.length = 0;
-	}
-	this.copyFrom(new App());
-	this.persist();
-}
-
-App.prototype.copyFrom = function(object) {
-	for (var attr in object) {
-		if (object.hasOwnProperty(attr)) this[attr] = object[attr];
 	}
 };
 
