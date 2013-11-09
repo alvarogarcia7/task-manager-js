@@ -40,7 +40,7 @@ var App = function() {
     	//console.log(self.tasks());
         self.tasks.remove(task);
         //console.log(self.tasks());
-        if(persist){
+        if(undefined==persist|| (undefined != persist && true == persist)){
 	        self.persist();
 	    }
     };
@@ -54,8 +54,8 @@ self.removeAll = function(){
 	console.log("removeAll. tasks().length="+this.tasks().length);
 	var i =0;
 	//console.log(this.tasks());
-	for (var i = this.tasks().length - 1; i >= 0; i--) {
-		self.removetask(this.tasks()[i]);
+		for (var i = this.tasks().length - 1; i >= 0; i--) {
+			self.removetask(this.tasks()[i], false);
 	};
 
 	//console.log("deleted "+i+" items");
@@ -80,6 +80,8 @@ self.copyFrom = function(string) {
 	return self;
 
 };
+
+	self.retrieveFromStorage();
 
 };
 
