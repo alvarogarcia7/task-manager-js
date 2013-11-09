@@ -7,6 +7,8 @@ var Task = function(name,deadline){
 
 
 var App = function() {
+
+	console.log("app constructor");
 	
 	var self = this;
 
@@ -26,8 +28,8 @@ var App = function() {
 		}
 		self.tasks.push(task);
 
-		console.log("self.tasks()=");
-		console.log(self.tasks());
+/*		console.log("self.tasks()=");
+		console.log(self.tasks());*/
 		this.persist();
 	};
 	
@@ -50,36 +52,37 @@ var App = function() {
     	self.removetask(task);
     };
 
-self.removeAll = function(){
-	console.log("removeAll. tasks().length="+this.tasks().length);
-	var i =0;
-	//console.log(this.tasks());
+	self.removeAll = function(){
+		//console.log("removeAll. tasks().length="+this.tasks().length);
+		console.log("removeAll");
+		var i =0;
+		//console.log(this.tasks());
 		for (var i = this.tasks().length - 1; i >= 0; i--) {
 			self.removetask(this.tasks()[i], false);
-	};
+		};
 
-	//console.log("deleted "+i+" items");
-	//console.log(this.tasks());
-	this.persist();
-	//console.log(this.tasks());
-}
-
-self.copyFrom = function(string) {
-	var object = ko.toJS(string);
-	var newApp = $.parseJSON(string);
-	for (var attr in object) {
-		//if (object.hasOwnProperty(attr)) {
-		if (self.hasOwnProperty(attr) || typeof attr == 'function'){
-			self[attr] = object[attr];
-		}
+		//console.log("deleted "+i+" items");
+		//console.log(this.tasks());
+		this.persist();
+		//console.log(this.tasks());
 	}
 
-	self.tasks(newApp.tasks);
-	self.idCounter = newApp.idCounter;
+	self.copyFrom = function(string) {
+		var object = ko.toJS(string);
+		var newApp = $.parseJSON(string);
+		for (var attr in object) {
+			//if (object.hasOwnProperty(attr)) {
+			if (self.hasOwnProperty(attr) || typeof attr == 'function'){
+				self[attr] = object[attr];
+			}
+		}
 
-	return self;
+		self.tasks(newApp.tasks);
+		self.idCounter = newApp.idCounter;
 
-};
+		return self;
+
+	};
 
 	self.retrieveFromStorage();
 
@@ -87,7 +90,7 @@ self.copyFrom = function(string) {
 
 
 App.prototype.persist = function() {
-	console.log("pasa persist");
+	//console.log("pasa persist");
 	this.saveToSession(this.storageName,ko.toJSON(this));
 };
 
@@ -105,8 +108,8 @@ App.prototype.retrieveFromStorage = function (){
 	if(this.isLocalStorageAvailable){
 		var appStorage = this.loadFromSession(this.storageName);
 
-		console.log("retrieveFromStorage :: "+appStorage);
-
+/*		console.log("retrieveFromStorage :: "+appStorage);
+*/
 		if(undefined != appStorage){
 			self = this.copyFrom(appStorage);
 		}
