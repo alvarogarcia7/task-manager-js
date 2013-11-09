@@ -107,9 +107,10 @@ function updateView(){
                 </tr>
             </thead>
             <tbody data-bind='foreach: tasks'>
-                <tr>
-                    <td><input class='required' data-bind='value: name' /></td>
-                    <td><input class='required number' data-bind='value: deadline' /></td>
+                <tr class="editInline">
+                	<td style="display:none"><span  onclick="console.log('a');" data-bind='text: id'></span></td>
+                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
+                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
                 <!--    <td><a href='#' data-bind='click: function(data, event){ /*console.log(data); */console.log($root); $root.removetask};'>Delete</a></td>-->
 				<td><a class="deleteTask" href='#' data-bind='click: $root.removetask'>Delete</a></td>
 
