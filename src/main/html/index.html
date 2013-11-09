@@ -15,7 +15,7 @@ var contentStd ={
 
 <input type="button" id="removedAll" name="removedAll" value="clear tasks"/>
 <!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
-<input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
+<input type="button" onclick="javascript:console.log(viewModel.app().tasks);" value="View tasks in console.log"/>
 
 
 
@@ -46,7 +46,7 @@ $(document).ready(function(){
 
 $('#taskName').keypress(function(e){
 	if(isEnter(e,true)){
-		viewModel.addtask();
+		viewModel.addTask();
 	}
 });
 /*
@@ -104,8 +104,9 @@ function updateView(){
 <div class='liveExample'> 
     
     <form >
-        <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
-        <table data-bind='visible: tasks().length > 0'>
+        <p>You have asked for <span data-bind='text: app().tasks.length'>&nbsp;</span> task(s)</p>
+        <p>You have asked for <span data-bind='text: $.toJSON(app())'>&nbsp;</span> task(s)</p>
+        <table >
             <thead>
                 <tr>
                     <th>task name</th>
@@ -113,7 +114,7 @@ function updateView(){
                     <th />
                 </tr>
             </thead>
-            <tbody data-bind='foreach: tasks'>
+            <tbody data-bind='foreach: app().tasks'>
                 <tr>
                     <td><input class='required' data-bind='value: name, uniqueName: true' /></td>
                     <td><input class='required number' data-bind='value: deadline, uniqueName: true' /></td>
@@ -122,8 +123,8 @@ function updateView(){
             </tbody>
         </table>
      
-        <button data-bind='click: addtask'>Add task</button>
-        <button data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+        <button data-bind='click: addTask'>Add task</button>
+        <button data-bind='enable: app().tasks.length > 0' type='submit'>Submit</button>
     </form>
     
 </div>
@@ -133,10 +134,7 @@ function updateView(){
 $(document).ready(function(){
 
 
- viewModel = new AppModel([
-    { name: "Tall Hat", deadline: "39.95"},
-    { name: "Long Cloak", deadline: "120.00"}
-]);
+ viewModel = new AppModel(new App());
 ko.applyBindings(viewModel);
 });
 

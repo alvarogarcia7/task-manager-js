@@ -1,6 +1,3 @@
-var app = {};
-
-
 function App() {
 	this.tasks=[];
 	this.author="me";
@@ -67,12 +64,16 @@ App.prototype.saveToSession = function(name,data){
 
 
 
-var AppModel = function(tasks) {
+var AppModel = function(app) {
     var self = this;
-    self.tasks = ko.observableArray(tasks);
+
+    //console.log(app);
+    self.app = ko.observable(app);
+    //console.log(self.app().tasks);
  
-    self.addtask = function() {
-        self.tasks.push({
+    self.addTask = function() {
+    	console.log("pasa addTask");
+        self.app().add({
             name: "",
             deadline: ""
         });
@@ -89,11 +90,6 @@ var AppModel = function(tasks) {
 };
  
 
- 
-// Activate jQuery Validation
-$(document).ready(function(){
-//$("form").validate({ submitHandler: viewModel.save });
-});
 /*
 Object.prototype.clone = function() {
   if(this.cloneNode) return this.cloneNode(true);
