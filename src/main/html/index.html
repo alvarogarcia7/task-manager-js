@@ -1,26 +1,28 @@
 <html>
 
-<head>
-
-</head>
-
 <body>
 
 <div>
 
-<script>
-var contentStd ={
- tasks:[],
- };
- </script>
 
-<input type="text" id="taskName" onchange="console.log('a');" value="crear tarea"/>
-<input type="text" id="taskDate" value="22/10" />
+<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
+<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
 
-<input type="button" id="removedAll" name="removedAll" value="clear tasks"/>
+
+<input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
 <!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
-<input type="button" onclick="javascript:console.log(app.tasks);" value="View tasks in console.log"/>
-</div>
+<input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
+
+
+
+<script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/cufon-yui.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/titilliummaps.font.js"></script>
+<script type="text/javascript" src="http://knockoutjs.com/js/json2.js"></script>
+
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shCore.js"></script> 
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script> 
+<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script> 
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
@@ -29,33 +31,33 @@ var contentStd ={
 <script src="../js/App.js"></script>
 
 
-<link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/>
-<script src="http://www.jsviews.com/download/jsviews.js"></script>
-
 <script>
+/*
 var app = new App();
 app.retrieveFromStorage();
+*/
 
-
-var content;
+var viewModel;
 $(document).ready(function(){
-
-function addNewTask(){
-	$('#add').click();
-}
 
 $('#taskName').keypress(function(e){
 	if(isEnter(e,true)){
-		addNewTask();
+
+		$('#addButton').click();
 	}
 });
+
 $('#taskDate').keypress(function(e){
 	if(isEnter(e,true)){
-		addNewTask();
+
+		$('#addButton').click();
 	}
 });
 
 
+
+
+/*
 updateView();
 
 function updateView(){
@@ -90,26 +92,58 @@ function updateView(){
 
 		  });
 }
+*/
 });
+
 </script>
 
-<div id="result"></div>
+<img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
+<div class='liveExample'> 
+    
+    <form >
+        <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
+        
+        <table >
+            <thead>
+                <tr>
+                    <th>task name</th>
+                    <th>deadline</th>
+                    <th />
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: tasks'>
+                <tr>
+                    <td><input class='required' data-bind='value: name' /></td>
+                    <td><input class='required number' data-bind='value: deadline' /></td>
+                <!--    <td><a href='#' data-bind='click: function(data, event){ /*console.log(data); */console.log($root); $root.removetask};'>Delete</a></td>-->
+				<td><a class="deleteTask" href='#' data-bind='click: $root.removetask'>Delete</a></td>
 
-<script id="taskTemplate" type="text/x-jsrender">
-<div>
-  <div class="buttons">
-  <button id="add">Add</button>
-</div>
-<ol>
-  {^{for tasks}}
-    <li>
-      <img class="remove" src="http://www.jsviews.com/resources/images/close.png" /> {^{:name}} 
-    </li>
-  {{/for}}
-</ol>
+                </tr>
+            </tbody>
+        </table>
+     
+        <button id="addButton" data-bind='click: function(data,event){
+        		var currentItem = data.currentItem();
+        		console.log(currentItem);
+        	  add(currentItem);
+        	   data.currentItem(new Task("",""));
+        	};'>
+        	 Add task</button>
+        <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+    </form>
+    <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
+    
 </div>
 
-<button id="removeAll"> clear all</button>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+
+ viewModel = new App();
+ //viewModel.addDummyData();
+ ko.applyBindings(viewModel);
+});
 
 </script>
 
