@@ -34,14 +34,25 @@
 <img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
 
-	<!-- ko if: $root.cache() == null -->
-	<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
-     <!-- /ko -->
+	<div>
+	<!-- ko switch -->
+		<div data-bind="case.visible: !$root.newTask()">
+			<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
+		</div>
 
-	<!-- ko if: $root.cache() !=null && $root.currentItem() !=null-->
-		<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" onkeypress="conditionalAddTask(event);"/>
-		<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"  onkeypress="conditionalAddTask(event)"/>
+		<div data-bind="case.visible: $else">
+			<input type="text" id="taskName"
+				 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
+				 onchange="console.log('changed name. now = '+$(this).val());"
+				 value="tarea dificil" class="new" />
+			<input type="text" id="taskDate"
+				data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
+				value="el año que viene"  class="new" />
+			<button id="addButton" data-bind='click: $root.add'> Add task</button>
+		</div>
 	<!-- /ko -->
+	</div>
+
 	
     
     <form >
@@ -60,19 +71,20 @@
 
             	<tr >
             		<td style="display:block"><span data-bind='text: id'></span></td>
-            	<!-- ko switch -->
-				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
-					    <td><input class='required' data-bind='value: name' /></td>
-	                    <td><input class='required number' data-bind='value: deadline' /></td>
 
-	                    <td><a  href='#' data-bind='click:$root.commitTask;'>Accept/Commit</a></td>
-						<td><a  href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</a></td>
+            	<!-- ko switch -->
+
+				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
+					    <td><input class='inlined required' data-bind='value: name' /></td>
+	                    <td><input class='inlined required number' data-bind='value: deadline' /></td>
+
+	                    <td><button id="commitTask" href='#' data-bind='click:$root.commitTask;'>Accept/Commit</button></td>
+						<td><button id="rollbackTask" href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</button></td>
 				    <!-- /ko --> <!-- ko case: $else -->
 	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
 	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
 						<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
 						<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
-
                     <!-- /ko -->
             	<!-- /ko -->
 
@@ -82,12 +94,7 @@
             </tbody>
         </table>
      
-        <button id="addButton" data-bind='click: function(data,event){
-        		var currentItem = data.currentItem();
-        		console.log(currentItem);
-        	  add(currentItem);
-        	};'>
-        	 Add task</button>
+        
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
     </form>
     <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
@@ -98,9 +105,13 @@
 
 function conditionalAddTask(e){
 	if(isEnter(e,true)){
+		console.log(viewModel.currentItem());
+		console.log(viewModel.tasks());
 		$('#addButton').click();
 	}
 };
+
+
 
 $(document).ready(function(){
 
@@ -109,6 +120,18 @@ $(document).ready(function(){
  //viewModel.addDummyData();
  viewModel.retrieveFromStorage();
  ko.applyBindings(viewModel);
+
+ $('input.new').on('keypress',function(event){
+ 	if(isEnter(event,true)){
+		$('#addButton').click();
+	}
+  });
+
+ $('input.inlined').on('keypress',function(event){
+ 	if(isEnter(event,true)){
+		$('#commitTask').click();
+	}
+  });
 });
 
 </script>
@@ -116,25 +139,6 @@ $(document).ready(function(){
 
 <script>
 var viewModel;
-$(document).ready(function(){
-
-	$('#taskName').keypress(function(e){
-		console.log("pasa taskName.keypress");
-		if(isEnter(e,true)){
-
-			$('#addButton').click();
-		}
-	});
-
-	$('#taskDate').keypress(function(e){
-		if(isEnter(e,true)){
-
-			$('#addButton').click();
-		}
-	});
-
-});
-
 </script>
 </body>
 </html>

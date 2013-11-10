@@ -23,13 +23,16 @@ var CONFIG = (function(){
 
 var App = function() {
 
+	var i = 0;
 	
 	var self = this;
 
 	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
-	this.currentItem =ko.observable(null);
+	self.newTask = ko.observable(false);
+
+	this.currentItem =ko.observable(new Task());
 
 	this.cache = ko.observable(null);
 	//!cache means editingInline
@@ -46,17 +49,17 @@ var App = function() {
 	};
 	*/
 
-	self.add = function(task){
+	self.add = function(){
+		var task = self.currentItem();
 		console.log(task);
 		if(undefined == task.id){
 			task.id=self.idCounter;
 			self.idCounter++;
 		}
 		self.tasks.push(task);
-
 		self.cache(null);
-		self.currentItem(null);
-		
+		self.currentItem(new Task());
+		this.newTask(false);
 		this.persist();
 	};
 
@@ -82,26 +85,27 @@ var App = function() {
 	self.createNewTask = function() {
 		this.cache(new Task());
 		this.currentItem(new Task());
+		this.newTask(true);
 	};
 
 	self.commitTask = function(task){
 		self.tasks.replace(self.cache,task);
-		self.currentItem(null);
+		self.currentItem(new Task());
 		self.cache(null);
+		self.newTask(false);
 	};
 
 	self.rollbackTask = function(task){
 		self.tasks.replace(task,self.cache);
-		self.currentItem(null);
+
+		self.currentItem(new Task());
 		self.cache(null);
+		this.newTask(false);
 	};
 
 	 self.removeTask = function(task,persist) {
     	
-    	//console.log(task);
-    	//console.log(self.tasks());
         self.tasks.remove(task);
-        //console.log(self.tasks());
         if(undefined==persist|| (undefined != persist && true == persist)){
         	console.log("pasa removeTask . persist = "+persist + " es true");
 	        self.persist();
@@ -111,10 +115,9 @@ var App = function() {
     };
 
     self.editTask = function(task) {
-    	self.editingInline = true;
+    	self.newTask(false);
     	self.currentItem(task);
     	self.cache(task.clone());
-
     };
 
 	self.removeAll = function(){
