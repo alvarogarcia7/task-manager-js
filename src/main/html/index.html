@@ -102,16 +102,6 @@
 
 <script type="text/javascript">
 
-function conditionalAddTask(e){
-	if(isEnter(e,true)){
-		console.log(viewModel.currentItem());
-		console.log(viewModel.tasks());
-		$('#addButton').click();
-	}
-};
-
-
-
 $(document).ready(function(){
 
 
@@ -122,7 +112,7 @@ $(document).ready(function(){
 
  $('input.new').on('keypress',function(event){
  	if(isEnter(event,true)){
-		$('#addButton').click();
+		$('#addButton')[0].click();
 	}
   });
 
