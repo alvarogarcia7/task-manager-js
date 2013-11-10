@@ -12,32 +12,29 @@
 
 
 <script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
-<script type="text/javascript" src="http://knockoutjs.com/js/cufon-yui.js"></script>
-<script type="text/javascript" src="http://knockoutjs.com/js/titilliummaps.font.js"></script>
-<script type="text/javascript" src="http://knockoutjs.com/js/json2.js"></script>
-
-<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shCore.js"></script> 
-<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script> 
-<script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script> 
+<script type="text/javascript" src="../../../lib/cufon-yui.js"></script>
+<script type="text/javascript" src="../../../lib/titilliummaps.font.js"></script>
+<script type="text/javascript" src="../../../lib/knockoutjs/json2.js"></script>
 
 <script type="text/javascript" src="../../../lib/knockoutjs/switch-case/knockout-switch-case.js"></script>
 
-<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
+<script src="../../../lib/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="../../../lib/jquery-2.0.3/jquery.json-2.4.js"></script>
 <script src="../../../lib/modernizr/modernizr.js"></script>
 <script src="../js/common-functions.js"></script>
 <script src="../js/App.js"></script>
+<!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
+<link href="../styles/tango32.css" rel="stylesheet"/>
 
 
 
 
-<img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
 
 	<div>
 	<!-- ko switch -->
 		<div data-bind="case.visible: !$root.newTask()">
-			<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
+			<a class="action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task"></a>
 		</div>
 
 		<div data-bind="case.visible: $else">
@@ -48,7 +45,8 @@
 			<input type="text" id="taskDate"
 				data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
 				value="el año que viene"  class="new" />
-			<button id="addButton" data-bind='click: $root.add'> Add task</button>
+			<a class="action commitNewTask" id="addButton" data-bind='click: $root.add' title="Add task"></a>
+			<a class="action rollbackNewTask" data-bind='click: $root.rollbackTask' title="Cancel"></a>
 		</div>
 	<!-- /ko -->
 	</div>
@@ -78,13 +76,14 @@
 					    <td><input class='inlined required' data-bind='value: name' /></td>
 	                    <td><input class='inlined required number' data-bind='value: deadline' /></td>
 
-	                    <td><button id="commitTask" href='#' data-bind='click:$root.commitTask;'>Accept/Commit</button></td>
-						<td><button id="rollbackTask" href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</button></td>
+						<td><a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes"></a></td>
+	                    <td><a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes"></a></td>
 				    <!-- /ko --> <!-- ko case: $else -->
-	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
-	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
-						<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
-						<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
+	                    <td ><span class='required ' data-bind='text: name' /></span></td>
+	                    <td ><span class='required number ' data-bind='text: deadline' /></span>
+	                    </td>
+	                    <td><a class="action editTask" href='#' data-bind='click: $root.editTask' title="Edit task"></a></td>
+	                    <td><a class="action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task"></a></td>
                     <!-- /ko -->
             	<!-- /ko -->
 
