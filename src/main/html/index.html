@@ -34,7 +34,7 @@
 	<div>
 	<!-- ko switch -->
 		<div data-bind="case.visible: !$root.newTask()">
-			<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
+			<a class="action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task"></a>
 		</div>
 
 		<div data-bind="case.visible: $else">
@@ -45,7 +45,8 @@
 			<input type="text" id="taskDate"
 				data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
 				value="el año que viene"  class="new" />
-			<button id="addButton" data-bind='click: $root.add'> Add task</button>
+			<a class="action commitNewTask" id="addButton" data-bind='click: $root.add' title="Add task"></a>
+			<a class="action rollbackNewTask" data-bind='click: $root.rollbackTask' title="Cancel"></a>
 		</div>
 	<!-- /ko -->
 	</div>
