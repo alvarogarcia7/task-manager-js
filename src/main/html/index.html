@@ -29,73 +29,19 @@
 <script src="../js/App.js"></script>
 
 
-<script>
-var viewModel;
-$(document).ready(function(){
 
-$('#taskName').keypress(function(e){
-	if(isEnter(e,true)){
-
-		$('#addButton').click();
-	}
-});
-
-$('#taskDate').keypress(function(e){
-	if(isEnter(e,true)){
-
-		$('#addButton').click();
-	}
-});
-
-
-
-
-/*
-updateView();
-
-function updateView(){
-	$.templates("#taskTemplate").link("#result", app)
-		.on("click", ".remove", function() {
-			var view = $.view(this);
-			console.log(app);
-			console.log(view.index);
-			$.observable(app.tasks).remove(view.index);
-			app.persist();
-		})
-		  .on("click", "#add", function() {
-		  	console.log(app.tasks);
-		  	console.log($.observable(app.tasks));
-
-			var task=new Object();
-			task.name=$('#taskName').val();
-			task.deadline=$('#taskDate').val();
-			$.observable(app.tasks).insert(app.tasks.length, task);
-			app.persist();
-		  })
-		.on("click", "#removeAll", function() {
-			console.log($.observable(app.tasks));
-			
-
-			var initialLength=app.tasks.length;
-			for(var i=0;i<initialLength;i++){
-				$.observable(app.tasks).remove(0);
-			}
-
-			app.persist();
-
-		  });
-}
-*/
-});
-
-</script>
 
 <img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
 
-	
-	<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
-<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
+	<!-- ko if: $root.cache() == null -->
+	<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
+     <!-- /ko -->
+
+	<!-- ko if: $root.cache() !=null && $root.currentItem() !=null-->
+		<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" onkeypress="conditionalAddTask(event);"/>
+		<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"  onkeypress="conditionalAddTask(event)"/>
+	<!-- /ko -->
 	
     
     <form >
@@ -115,7 +61,7 @@ function updateView(){
             	<tr >
             		<td style="display:block"><span data-bind='text: id'></span></td>
             	<!-- ko switch -->
-				    <!-- ko case: $data.id == $parent.currentItem().id  -->
+				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
 					    <td><input class='required' data-bind='value: name' /></td>
 	                    <td><input class='required number' data-bind='value: deadline' /></td>
 
@@ -140,16 +86,21 @@ function updateView(){
         		var currentItem = data.currentItem();
         		console.log(currentItem);
         	  add(currentItem);
-        	   data.currentItem(new Task("",""));
         	};'>
         	 Add task</button>
-        <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+        <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
     </form>
     <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
     
 </div>
 
 <script type="text/javascript">
+
+function conditionalAddTask(e){
+	if(isEnter(e,true)){
+		$('#addButton').click();
+	}
+};
 
 $(document).ready(function(){
 
@@ -162,6 +113,29 @@ $(document).ready(function(){
 
 </script>
 
+
+<script>
+var viewModel;
+$(document).ready(function(){
+
+	$('#taskName').keypress(function(e){
+		console.log("pasa taskName.keypress");
+		if(isEnter(e,true)){
+
+			$('#addButton').click();
+		}
+	});
+
+	$('#taskDate').keypress(function(e){
+		if(isEnter(e,true)){
+
+			$('#addButton').click();
+		}
+	});
+
+});
+
+</script>
 </body>
 </html>
 

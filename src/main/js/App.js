@@ -29,9 +29,10 @@ var App = function() {
 	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
-	this.currentItem =ko.observable(new Task("",""));
+	this.currentItem =ko.observable(null);
 
-	this.cache = new Task();
+	this.cache = ko.observable(null);
+	//!cache means editingInline
 	
 	self.author=ko.observable("me");
 
@@ -46,11 +47,15 @@ var App = function() {
 	*/
 
 	self.add = function(task){
+		console.log(task);
 		if(undefined == task.id){
 			task.id=self.idCounter;
 			self.idCounter++;
 		}
 		self.tasks.push(task);
+
+		self.cache(null);
+		self.currentItem(null);
 		
 		this.persist();
 	};
@@ -74,15 +79,21 @@ var App = function() {
 	// $root.commitTask'>Accept/Commit</a></td>
 	// 					<td><a  href='#' data-bind='click: $root.rollbackTask
 
+	self.createNewTask = function() {
+		this.cache(new Task());
+		this.currentItem(new Task());
+	};
+
 	self.commitTask = function(task){
 		self.tasks.replace(self.cache,task);
-		self.currentItem(new Task());
+		self.currentItem(null);
+		self.cache(null);
 	};
 
 	self.rollbackTask = function(task){
 		self.tasks.replace(task,self.cache);
-		self.currentItem(new Task());
-		self.cache=new Task();
+		self.currentItem(null);
+		self.cache(null);
 	};
 
 	 self.removeTask = function(task,persist) {
@@ -100,8 +111,9 @@ var App = function() {
     };
 
     self.editTask = function(task) {
+    	self.editingInline = true;
     	self.currentItem(task);
-    	self.cache = task.clone();
+    	self.cache(task.clone());
 
     };
 
@@ -192,7 +204,7 @@ App.prototype.clearStorage = function(){
 
 App.prototype.addDummyData =function(){
 	this.add(new Task("task 1","today"));
-	this.currentItem(new Task("comprar pan","maNana"));
+	this.currentItem(null);
 };
 
 /*
