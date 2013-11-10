@@ -9,6 +9,17 @@ Task.prototype.update = function(name,deadline,id) {
 	this.id = id;
 };
 
+var CONFIG = (function(){
+	var privateVars = {
+		'STORAGE_NAME':'content',
+	};
+
+	return {
+		get: function (name) { return privateVars[name]; }
+	};
+
+})();
+
 
 var App = function() {
 
@@ -23,7 +34,6 @@ var App = function() {
 	this.cache = new Task();
 	
 	self.author=ko.observable("me");
-	self.storageName='content';
 
 	/*
 	//Bad idea -- does not work
@@ -39,45 +49,40 @@ var App = function() {
 		if(undefined == task.id){
 			task.id=self.idCounter;
 			self.idCounter++;
-		} else {
-			var taskToDelete = self.findTaskById(task.id);
-			self.removeTask(taskToDelete);
 		}
 		self.tasks.push(task);
-
+		
 		this.persist();
 	};
+
 	
 
-	self.findTaskById = function(id){
-		for (var i = self.tasks().length - 1; i >= 0; i--) {
-			var currentItem = self.tasks()[i];
-			if(id == currentItem.id){
-				return currentItem;
-			}
-		};
-	};
+	// self.findPositionInTasksById =function(id){
+	// 	for (var i = self.tasks().length - 1; i >= 0; i--) {
+	// 		var currentItem = self.tasks()[i];
+	// 		if(id == currentItem.id){
+	// 			return i;
+	// 		}
+	// 	};
+	// };
+
+	// self.findTaskById = function(id){
+	// 	var position = self.findPositionInTasksById(id);
+	// 	return self.tasks()[position];
+	// };
 
 	// $root.commitTask'>Accept/Commit</a></td>
 	// 					<td><a  href='#' data-bind='click: $root.rollbackTask
 
 	self.commitTask = function(task){
-		self.add(task);
+		self.tasks.replace(self.cache,task);
 		self.currentItem(new Task());
 	};
 
 	self.rollbackTask = function(task){
-
-		console.log("received task = ");
-		console.log(task);
-
-		console.log(self.cache);
-		self.add(self.cache);
-		console.log(self.cache);
+		self.tasks.replace(task,self.cache);
 		self.currentItem(new Task());
-		console.log(self.cache);
 		self.cache=new Task();
-		console.log(self.cache);
 	};
 
 	 self.removeTask = function(task,persist) {
@@ -140,7 +145,7 @@ var App = function() {
 
 
 App.prototype.persist = function() {
-	this.saveToSession(this.storageName,ko.toJSON(this));
+	this.saveToSession(CONFIG.get('STORAGE_NAME'),ko.toJSON(this));
 };
 
 App.prototype.isLocalStorageAvailable = function(){
@@ -157,7 +162,7 @@ App.prototype.retrieveFromStorage = function (){
 	var storedAppAvailable = true;
 	var appStorage;
 	if(this.isLocalStorageAvailable){
-		appStorage = this.loadFromSession(this.storageName);
+		appStorage = this.loadFromSession(CONFIG.get('STORAGE_NAME'));
 
 		//http://saladwithsteve.com/2008/02/javascript-undefined-vs-null.html
 		if(!appStorage){
@@ -179,6 +184,10 @@ App.prototype.loadFromSession = function(name) {
 App.prototype.saveToSession = function(name,data){
 	//console.log("saveToSession:: name="+name+", data = "+data);
 	localStorage.setItem(name,data);
+}
+
+App.prototype.clearStorage = function(){
+	localStorage.clear();
 }
 
 App.prototype.addDummyData =function(){
