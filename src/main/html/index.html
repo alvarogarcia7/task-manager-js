@@ -27,11 +27,12 @@
 <script src="../../../lib/modernizr/modernizr.js"></script>
 <script src="../js/common-functions.js"></script>
 <script src="../js/App.js"></script>
+<!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
+<link href="../styles/tango32.css" rel="stylesheet"/>
 
 
 
 
-<img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
 
 	<div>
@@ -78,13 +79,14 @@
 					    <td><input class='inlined required' data-bind='value: name' /></td>
 	                    <td><input class='inlined required number' data-bind='value: deadline' /></td>
 
-	                    <td><button id="commitTask" href='#' data-bind='click:$root.commitTask;'>Accept/Commit</button></td>
-						<td><button id="rollbackTask" href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</button></td>
+						<td><a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes"></a></td>
+	                    <td><a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes"></a></td>
 				    <!-- /ko --> <!-- ko case: $else -->
-	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
-	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
-						<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
-						<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
+	                    <td ><span class='required ' data-bind='text: name' /></span></td>
+	                    <td ><span class='required number ' data-bind='text: deadline' /></span>
+	                    </td>
+	                    <td><a class="action editTask" href='#' data-bind='click: $root.editTask' title="Edit task"></a></td>
+	                    <td><a class="action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task"></a></td>
                     <!-- /ko -->
             	<!-- /ko -->
 
