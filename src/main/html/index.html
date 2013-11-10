@@ -5,10 +5,6 @@
 <div>
 
 
-<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
-<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
-
-
 <input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
 <!-- <input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/> -->
 <input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
@@ -33,69 +29,31 @@
 <script src="../js/App.js"></script>
 
 
-<script>
-var viewModel;
-$(document).ready(function(){
 
-$('#taskName').keypress(function(e){
-	if(isEnter(e,true)){
-
-		$('#addButton').click();
-	}
-});
-
-$('#taskDate').keypress(function(e){
-	if(isEnter(e,true)){
-
-		$('#addButton').click();
-	}
-});
-
-
-
-
-/*
-updateView();
-
-function updateView(){
-	$.templates("#taskTemplate").link("#result", app)
-		.on("click", ".remove", function() {
-			var view = $.view(this);
-			console.log(app);
-			console.log(view.index);
-			$.observable(app.tasks).remove(view.index);
-			app.persist();
-		})
-		  .on("click", "#add", function() {
-		  	console.log(app.tasks);
-		  	console.log($.observable(app.tasks));
-
-			var task=new Object();
-			task.name=$('#taskName').val();
-			task.deadline=$('#taskDate').val();
-			$.observable(app.tasks).insert(app.tasks.length, task);
-			app.persist();
-		  })
-		.on("click", "#removeAll", function() {
-			console.log($.observable(app.tasks));
-			
-
-			var initialLength=app.tasks.length;
-			for(var i=0;i<initialLength;i++){
-				$.observable(app.tasks).remove(0);
-			}
-
-			app.persist();
-
-		  });
-}
-*/
-});
-
-</script>
 
 <img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
+
+	<div>
+	<!-- ko switch -->
+		<div data-bind="case.visible: !$root.newTask()">
+			<button id="addNewTaskButton" data-bind='click: $root.createNewTask'> Add new task</button>
+		</div>
+
+		<div data-bind="case.visible: $else">
+			<input type="text" id="taskName"
+				 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
+				 onchange="console.log('changed name. now = '+$(this).val());"
+				 value="tarea dificil" class="new" />
+			<input type="text" id="taskDate"
+				data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
+				value="el año que viene"  class="new" />
+			<button id="addButton" data-bind='click: $root.add'> Add task</button>
+		</div>
+	<!-- /ko -->
+	</div>
+
+	
     
     <form >
         <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
@@ -113,19 +71,22 @@ function updateView(){
 
             	<tr >
             		<td style="display:block"><span data-bind='text: id'></span></td>
+
             	<!-- ko switch -->
-				    <!-- ko case: $data.id == $parent.currentItem().id  -->
-					    <td><input class='required' data-bind='value: name' /></td>
-	                    <td><input class='required number' data-bind='value: deadline' /></td>
+
+				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
+					    <td><input class='inlined required' data-bind='value: name' /></td>
+	                    <td><input class='inlined required number' data-bind='value: deadline' /></td>
+
+	                    <td><button id="commitTask" href='#' data-bind='click:$root.commitTask;'>Accept/Commit</button></td>
+						<td><button id="rollbackTask" href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</button></td>
 				    <!-- /ko --> <!-- ko case: $else -->
 	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
 	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
+						<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
+						<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
                     <!-- /ko -->
             	<!-- /ko -->
-                    <!--Actions -->
-				<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removetask(data,true); };'>Delete</a></td>
-				<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
-
 
 				<!-- $data is the current element:
 				http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
@@ -133,20 +94,24 @@ function updateView(){
             </tbody>
         </table>
      
-        <button id="addButton" data-bind='click: function(data,event){
-        		var currentItem = data.currentItem();
-        		console.log(currentItem);
-        	  add(currentItem);
-        	   data.currentItem(new Task("",""));
-        	};'>
-        	 Add task</button>
-        <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button>
+        
+        <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
     </form>
     <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
     
 </div>
 
 <script type="text/javascript">
+
+function conditionalAddTask(e){
+	if(isEnter(e,true)){
+		console.log(viewModel.currentItem());
+		console.log(viewModel.tasks());
+		$('#addButton').click();
+	}
+};
+
+
 
 $(document).ready(function(){
 
@@ -155,10 +120,26 @@ $(document).ready(function(){
  //viewModel.addDummyData();
  viewModel.retrieveFromStorage();
  ko.applyBindings(viewModel);
+
+ $('input.new').on('keypress',function(event){
+ 	if(isEnter(event,true)){
+		$('#addButton').click();
+	}
+  });
+
+ $('input.inlined').on('keypress',function(event){
+ 	if(isEnter(event,true)){
+		$('#commitTask').click();
+	}
+  });
 });
 
 </script>
 
+
+<script>
+var viewModel;
+</script>
 </body>
 </html>
 

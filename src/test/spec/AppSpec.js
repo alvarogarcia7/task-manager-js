@@ -68,7 +68,7 @@ describe("App", function() {
 
   function expectStorageIsEmpty(){
 
-    var a=app.loadFromSession(app.storageName);
+    var a=app.loadFromSession(CONFIG.get('STORAGE_NAME'));
     //console.log("expectStorageIsEmptyOrLikeNew "+a);
     var app2 = new App();
     app2 = app2.copyFrom(a);
@@ -78,7 +78,7 @@ describe("App", function() {
   }
 
   function expectStorageIsNotEmpty(taskSize){
-    var appString = app.loadFromSession(app.storageName);
+    var appString = app.loadFromSession(CONFIG.get('STORAGE_NAME'));
     //console.log("appstring = "+appString);
     expect(appString).not.toBe(null);
     expect(appString).not.toBe(undefined);

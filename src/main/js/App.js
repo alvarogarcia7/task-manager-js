@@ -1,23 +1,43 @@
-var Task = function(name,deadline){
+var Task = function(name,deadline,id){
 	var self = this;
-	self.name = name;
-	self.deadline = deadline;
-	self.id=undefined;
+	this.update(name,deadline,id);
 };
+
+Task.prototype.update = function(name,deadline,id) {
+	this.name= name||"";
+	this.deadline= deadline||"";
+	this.id = id;
+};
+
+var CONFIG = (function(){
+	var privateVars = {
+		'STORAGE_NAME':'content',
+	};
+
+	return {
+		get: function (name) { return privateVars[name]; }
+	};
+
+})();
 
 
 var App = function() {
 
+	var i = 0;
 	
 	var self = this;
 
 	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
-	this.currentItem = ko.observable(new Task("",""));
+	self.newTask = ko.observable(false);
+
+	this.currentItem =ko.observable(new Task());
+
+	this.cache = ko.observable(null);
+	//!cache means editingInline
 	
 	self.author=ko.observable("me");
-	self.storageName='content';
 
 	/*
 	//Bad idea -- does not work
@@ -29,45 +49,75 @@ var App = function() {
 	};
 	*/
 
-	self.add = function(task){
+	self.add = function(){
+		var task = self.currentItem();
+		console.log(task);
 		if(undefined == task.id){
 			task.id=self.idCounter;
 			self.idCounter++;
-		} else {
-			var taskToDelete = self.findTaskById(task.id);
-			self.removetask(taskToDelete);
 		}
 		self.tasks.push(task);
-
+		self.cache(null);
+		self.currentItem(new Task());
+		this.newTask(false);
 		this.persist();
 	};
-	
-	//self.add(new Task("task 1","today"));
 
-	self.findTaskById = function(id){
-		for (var i = self.tasks().length - 1; i >= 0; i--) {
-				if(id == self.tasks()[i].id){
-					return self.tasks()[i];
-				}
-			};
+	
+
+	// self.findPositionInTasksById =function(id){
+	// 	for (var i = self.tasks().length - 1; i >= 0; i--) {
+	// 		var currentItem = self.tasks()[i];
+	// 		if(id == currentItem.id){
+	// 			return i;
+	// 		}
+	// 	};
+	// };
+
+	// self.findTaskById = function(id){
+	// 	var position = self.findPositionInTasksById(id);
+	// 	return self.tasks()[position];
+	// };
+
+	// $root.commitTask'>Accept/Commit</a></td>
+	// 					<td><a  href='#' data-bind='click: $root.rollbackTask
+
+	self.createNewTask = function() {
+		this.cache(new Task());
+		this.currentItem(new Task());
+		this.newTask(true);
 	};
 
-	 self.removetask = function(task,persist) {
+	self.commitTask = function(task){
+		self.tasks.replace(self.cache,task);
+		self.currentItem(new Task());
+		self.cache(null);
+		self.newTask(false);
+	};
+
+	self.rollbackTask = function(task){
+		self.tasks.replace(task,self.cache);
+
+		self.currentItem(new Task());
+		self.cache(null);
+		this.newTask(false);
+	};
+
+	 self.removeTask = function(task,persist) {
     	
-    	//console.log(task);
-    	//console.log(self.tasks());
         self.tasks.remove(task);
-        //console.log(self.tasks());
         if(undefined==persist|| (undefined != persist && true == persist)){
-        	console.log("pasa removetask . persist = "+persist + " es true");
+        	console.log("pasa removeTask . persist = "+persist + " es true");
 	        self.persist();
 	    } else {
-	    	console.log("pasa removetask . persist = "+persist + " es false");
+	    	console.log("pasa removeTask . persist = "+persist + " es false");
 	    }
     };
 
     self.editTask = function(task) {
+    	self.newTask(false);
     	self.currentItem(task);
+    	self.cache(task.clone());
     };
 
 	self.removeAll = function(){
@@ -76,7 +126,7 @@ var App = function() {
 		var i =0;
 		//console.log(this.tasks());
 		for (var i = this.tasks().length - 1; i >= 0; i--) {
-			self.removetask(this.tasks()[i], false);
+			self.removeTask(this.tasks()[i], false);
 		};
 
 		//console.log("deleted "+i+" items");
@@ -110,7 +160,7 @@ var App = function() {
 
 
 App.prototype.persist = function() {
-	this.saveToSession(this.storageName,ko.toJSON(this));
+	this.saveToSession(CONFIG.get('STORAGE_NAME'),ko.toJSON(this));
 };
 
 App.prototype.isLocalStorageAvailable = function(){
@@ -127,7 +177,7 @@ App.prototype.retrieveFromStorage = function (){
 	var storedAppAvailable = true;
 	var appStorage;
 	if(this.isLocalStorageAvailable){
-		appStorage = this.loadFromSession(this.storageName);
+		appStorage = this.loadFromSession(CONFIG.get('STORAGE_NAME'));
 
 		//http://saladwithsteve.com/2008/02/javascript-undefined-vs-null.html
 		if(!appStorage){
@@ -151,9 +201,13 @@ App.prototype.saveToSession = function(name,data){
 	localStorage.setItem(name,data);
 }
 
+App.prototype.clearStorage = function(){
+	localStorage.clear();
+}
+
 App.prototype.addDummyData =function(){
 	this.add(new Task("task 1","today"));
-	this.currentItem(new Task("comprar pan","maNana"));
+	this.currentItem(null);
 };
 
 /*
@@ -169,8 +223,8 @@ var AppModel = function(app) {
         });
     };
  
-    self.removetask = function(task) {
-    	console.log("pasa removetask");
+    self.removeTask = function(task) {
+    	console.log("pasa removeTask");
     	console.log(self.app());
         self.app().tasks.remove(task);
         console.log(self.app());
@@ -184,7 +238,7 @@ var AppModel = function(app) {
 */
  
 
-/*
+
 Object.prototype.clone = function() {
   if(this.cloneNode) return this.cloneNode(true);
   var copy = this instanceof Array ? [] : {};
@@ -208,4 +262,3 @@ Boolean.prototype.clone =
 String.prototype.clone = function() {
   return this;
 }
-*/
