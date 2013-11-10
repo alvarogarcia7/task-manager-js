@@ -4,8 +4,7 @@ a.action {
     height: 32px;
     width: 32px;
     background-image: url('../img/tango32.png');
-    background-repeat: no-repeat
-    background-position: top left;
+    background-repeat: no-repeat;
 }
 .accessories-calculator  { background-position: 0px 0px;}
 .accessories-character-map  { background-position: 0px -33px;}

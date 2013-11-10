@@ -83,24 +83,26 @@ var App = function() {
 	// 					<td><a  href='#' data-bind='click: $root.rollbackTask
 
 	self.createNewTask = function() {
-		this.cache(new Task());
-		this.currentItem(new Task());
-		this.newTask(true);
+		self.cache(new Task());
+		self.currentItem(new Task());
+		self.newTask(true);
 	};
 
 	self.commitTask = function(task){
-		self.tasks.replace(self.cache,task);
+		self.tasks.replace(self.cache(),task);
+		self.tasks.valueHasMutated();
 		self.currentItem(new Task());
 		self.cache(null);
 		self.newTask(false);
+		self.persist();
 	};
 
 	self.rollbackTask = function(task){
-		self.tasks.replace(task,self.cache);
-
+		self.tasks.replace(task,self.cache());
+		self.tasks.valueHasMutated();
 		self.currentItem(new Task());
 		self.cache(null);
-		this.newTask(false);
+		self.newTask(false);
 	};
 
 	 self.removeTask = function(task,persist) {
