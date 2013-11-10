@@ -42,14 +42,14 @@ var App = function() {
 		this.persist();
 	};
 	
-	//self.add(new Task("task 1","today"));
 
 	self.findTaskById = function(id){
 		for (var i = self.tasks().length - 1; i >= 0; i--) {
-				if(id == self.tasks()[i].id){
-					return self.tasks()[i];
-				}
-			};
+			var currentItem = self.tasks()[i];
+			if(id == currentItem.id){
+				return currentItem;
+			}
+		};
 	};
 
 	 self.removeTask = function(task,persist) {
