@@ -1,8 +1,12 @@
-var Task = function(name,deadline){
+var Task = function(name,deadline,id){
 	var self = this;
-	self.name = name;
-	self.deadline = deadline;
-	self.id=undefined;
+	this.update(name,deadline,id);
+};
+
+Task.prototype.update = function(name,deadline,id) {
+	this.name= name||"";
+	this.deadline= deadline||"";
+	this.id = id;
 };
 
 
@@ -14,7 +18,9 @@ var App = function() {
 	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
-	this.currentItem = ko.observable(new Task("",""));
+	this.currentItem =ko.observable(new Task("",""));
+
+	this.cache = new Task();
 	
 	self.author=ko.observable("me");
 	self.storageName='content';
@@ -52,6 +58,28 @@ var App = function() {
 		};
 	};
 
+	// $root.commitTask'>Accept/Commit</a></td>
+	// 					<td><a  href='#' data-bind='click: $root.rollbackTask
+
+	self.commitTask = function(task){
+		self.add(task);
+		self.currentItem(new Task());
+	};
+
+	self.rollbackTask = function(task){
+
+		console.log("received task = ");
+		console.log(task);
+
+		console.log(self.cache);
+		self.add(self.cache);
+		console.log(self.cache);
+		self.currentItem(new Task());
+		console.log(self.cache);
+		self.cache=new Task();
+		console.log(self.cache);
+	};
+
 	 self.removeTask = function(task,persist) {
     	
     	//console.log(task);
@@ -68,6 +96,8 @@ var App = function() {
 
     self.editTask = function(task) {
     	self.currentItem(task);
+    	self.cache = task.clone();
+
     };
 
 	self.removeAll = function(){
@@ -184,7 +214,7 @@ var AppModel = function(app) {
 */
  
 
-/*
+
 Object.prototype.clone = function() {
   if(this.cloneNode) return this.cloneNode(true);
   var copy = this instanceof Array ? [] : {};
@@ -208,4 +238,3 @@ Boolean.prototype.clone =
 String.prototype.clone = function() {
   return this;
 }
-*/

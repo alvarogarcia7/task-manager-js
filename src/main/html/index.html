@@ -5,10 +5,6 @@
 <div>
 
 
-<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
-<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
-
-
 <input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
 <!-- <input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/> -->
 <input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
@@ -96,6 +92,11 @@ function updateView(){
 
 <img class="remove" src="http://www.jsviews.com/resources/images/close.png" />
 <div class='liveExample'> 
+
+	
+	<input type="text" id="taskName" data-bind="value: currentItem().name, valueUpdate:'afterkeydown'" onchange="console.log('changed name. now = '+$(this).val());" value="tarea dificil" />
+<input type="text" id="taskDate" data-bind="value: currentItem().deadline, valueUpdate:'afterkeydown'" value="el año que viene"/>
+	
     
     <form >
         <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
@@ -117,15 +118,17 @@ function updateView(){
 				    <!-- ko case: $data.id == $parent.currentItem().id  -->
 					    <td><input class='required' data-bind='value: name' /></td>
 	                    <td><input class='required number' data-bind='value: deadline' /></td>
+
+	                    <td><a  href='#' data-bind='click:$root.commitTask;'>Accept/Commit</a></td>
+						<td><a  href='#' data-bind='click: $root.rollbackTask'>Not Accept/Rollback</a></td>
 				    <!-- /ko --> <!-- ko case: $else -->
 	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
 	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
+						<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
+						<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
+
                     <!-- /ko -->
             	<!-- /ko -->
-                    <!--Actions -->
-				<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };'>Delete</a></td>
-				<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
-
 
 				<!-- $data is the current element:
 				http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
