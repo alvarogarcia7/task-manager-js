@@ -33,16 +33,24 @@ var App = function() {
 		if(undefined == task.id){
 			task.id=self.idCounter;
 			self.idCounter++;
+		} else {
+			var taskToDelete = self.findTaskById(task.id);
+			self.removetask(taskToDelete);
 		}
 		self.tasks.push(task);
 
-/*		console.log("self.tasks()=");
-		console.log(self.tasks());*/
 		this.persist();
 	};
 	
 	//self.add(new Task("task 1","today"));
 
+	self.findTaskById = function(id){
+		for (var i = self.tasks().length - 1; i >= 0; i--) {
+				if(id == self.tasks()[i].id){
+					return self.tasks()[i];
+				}
+			};
+	};
 
 	 self.removetask = function(task,persist) {
     	
@@ -60,7 +68,6 @@ var App = function() {
 
     self.editTask = function(task) {
     	self.currentItem(task);
-    	self.removetask(task);
     };
 
 	self.removeAll = function(){
@@ -140,7 +147,7 @@ App.prototype.loadFromSession = function(name) {
 };
 
 App.prototype.saveToSession = function(name,data){
-	console.log("saveToSession:: name="+name+", data = "+data);
+	//console.log("saveToSession:: name="+name+", data = "+data);
 	localStorage.setItem(name,data);
 }
 
