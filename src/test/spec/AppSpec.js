@@ -1,8 +1,7 @@
 describe("App", function() {
   var app;
 
-  var i =0;
-
+  
   beforeEach(function() {
     app = new App();
   });
@@ -19,13 +18,11 @@ describe("App", function() {
       });
 
     	it("variable app should exist", function() {
-       
     		expect(undefined == app).toBeFalsy();
     	});
 
       
     	it("tasks should be empty", function() {
-       
     		expect(app.tasks()).toEqual([]);
     	});
 
@@ -48,7 +45,14 @@ describe("App", function() {
       expectStorageIsNotEmpty(2);
       add1Task();
       expectStorageIsNotEmpty(3);
-    }); 
+    });
+
+
+    localStorage.clear();
+    it("starting for first time", function(){
+      add1Task();
+      expectStorageIsNotEmpty(1);
+    });
 
   });
 

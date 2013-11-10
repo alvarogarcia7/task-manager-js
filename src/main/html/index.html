@@ -113,7 +113,9 @@ function updateView(){
                     <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
                     <td ><span class='required number ' data-bind='text: deadline' /></span></td>
                     <!--Actions -->
-				<td><a class="deleteTask" href='#' data-bind='click: $root.removetask'>Delete</a></td>
+				<td><a class="deleteTask" href='#' data-bind='click: function(data,event){
+						$parent.removetask(data,true);
+					};'>Delete</a></td>
 				<td><a class="deleteTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
 
 

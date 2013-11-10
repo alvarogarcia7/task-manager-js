@@ -2,24 +2,32 @@ var Task = function(name,deadline){
 	var self = this;
 	self.name = name;
 	self.deadline = deadline;
-	self.id=0;
+	self.id=undefined;
 };
 
 
 var App = function() {
 
-	console.log("app constructor");
 	
 	var self = this;
 
 	self.idCounter =0;
 	self.tasks=ko.observableArray([]);
 
-	this.currentItem = ko.observable(new Task("comprar pan","maNana"));
+	this.currentItem = ko.observable(new Task("",""));
 	
 	self.author=ko.observable("me");
 	self.storageName='content';
 
+	/*
+	//Bad idea -- does not work
+	self.initializeAttributes = function(){
+		self.author = ko.observable("me");
+		self.currentItem = ko.observable(new Task("a","b"));
+		self.tasks = ko.observableArray([new Task("a","b"),]);
+		self.idCounter = 0;
+	};
+	*/
 
 	self.add = function(task){
 		if(undefined == task.id){
@@ -37,13 +45,16 @@ var App = function() {
 
 
 	 self.removetask = function(task,persist) {
-    	//console.log("pasa removetask");
+    	
     	//console.log(task);
     	//console.log(self.tasks());
         self.tasks.remove(task);
         //console.log(self.tasks());
         if(undefined==persist|| (undefined != persist && true == persist)){
+        	console.log("pasa removetask . persist = "+persist + " es true");
 	        self.persist();
+	    } else {
+	    	console.log("pasa removetask . persist = "+persist + " es false");
 	    }
     };
 
@@ -68,18 +79,20 @@ var App = function() {
 	}
 
 	self.copyFrom = function(string) {
-		var object = ko.toJS(string);
-		var newApp = $.parseJSON(string);
-		for (var attr in object) {
-			//if (object.hasOwnProperty(attr)) {
-			if (self.hasOwnProperty(attr) || typeof attr == 'function'){
-				self[attr] = object[attr];
+
+		if(string){
+			var object = ko.toJS(string);
+			var newApp = $.parseJSON(string);
+			for (var attr in object) {
+				//if (object.hasOwnProperty(attr)) {
+				if (self.hasOwnProperty(attr) || typeof attr == 'function'){
+					self[attr] = object[attr];
+				}
 			}
+
+			self.tasks(newApp.tasks);
+			self.idCounter = newApp.idCounter;
 		}
-
-		self.tasks(newApp.tasks);
-		self.idCounter = newApp.idCounter;
-
 		return self;
 
 	};
@@ -90,7 +103,6 @@ var App = function() {
 
 
 App.prototype.persist = function() {
-	//console.log("pasa persist");
 	this.saveToSession(this.storageName,ko.toJSON(this));
 };
 
@@ -99,21 +111,27 @@ App.prototype.isLocalStorageAvailable = function(){
 	if(available){
 		console.log("localstorage is available. content="+$.toJSON(content));
 	} else {
-		console.log("localstorage is NOT available");
+		alert("localstorage is NOT available. The application may not work properly");
 	}
 	return Modernizr.localstorage;
 };
 
 App.prototype.retrieveFromStorage = function (){
+	var storedAppAvailable = true;
+	var appStorage;
 	if(this.isLocalStorageAvailable){
-		var appStorage = this.loadFromSession(this.storageName);
+		appStorage = this.loadFromSession(this.storageName);
 
-/*		console.log("retrieveFromStorage :: "+appStorage);
-*/
-		if(undefined != appStorage){
-			self = this.copyFrom(appStorage);
+		//http://saladwithsteve.com/2008/02/javascript-undefined-vs-null.html
+		if(!appStorage){
+			storedAppAvailable = false;
 		}
-
+	} else {
+		storedAppAvailable = false;
+	}
+	
+	if(storedAppAvailable){
+		self = this.copyFrom(appStorage);
 	}
 };
 
@@ -122,6 +140,7 @@ App.prototype.loadFromSession = function(name) {
 };
 
 App.prototype.saveToSession = function(name,data){
+	console.log("saveToSession:: name="+name+", data = "+data);
 	localStorage.setItem(name,data);
 }
 
