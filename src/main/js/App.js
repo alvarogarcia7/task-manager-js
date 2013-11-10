@@ -35,7 +35,7 @@ var App = function() {
 			self.idCounter++;
 		} else {
 			var taskToDelete = self.findTaskById(task.id);
-			self.removetask(taskToDelete);
+			self.removeTask(taskToDelete);
 		}
 		self.tasks.push(task);
 
@@ -52,17 +52,17 @@ var App = function() {
 			};
 	};
 
-	 self.removetask = function(task,persist) {
+	 self.removeTask = function(task,persist) {
     	
     	//console.log(task);
     	//console.log(self.tasks());
         self.tasks.remove(task);
         //console.log(self.tasks());
         if(undefined==persist|| (undefined != persist && true == persist)){
-        	console.log("pasa removetask . persist = "+persist + " es true");
+        	console.log("pasa removeTask . persist = "+persist + " es true");
 	        self.persist();
 	    } else {
-	    	console.log("pasa removetask . persist = "+persist + " es false");
+	    	console.log("pasa removeTask . persist = "+persist + " es false");
 	    }
     };
 
@@ -76,7 +76,7 @@ var App = function() {
 		var i =0;
 		//console.log(this.tasks());
 		for (var i = this.tasks().length - 1; i >= 0; i--) {
-			self.removetask(this.tasks()[i], false);
+			self.removeTask(this.tasks()[i], false);
 		};
 
 		//console.log("deleted "+i+" items");
@@ -169,8 +169,8 @@ var AppModel = function(app) {
         });
     };
  
-    self.removetask = function(task) {
-    	console.log("pasa removetask");
+    self.removeTask = function(task) {
+    	console.log("pasa removeTask");
     	console.log(self.app());
         self.app().tasks.remove(task);
         console.log(self.app());
