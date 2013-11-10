@@ -10,7 +10,7 @@
 
 
 <input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
-<!-- <input type="button" onclick="sessionStorage.clear();;" value="Clear all sessionStorage"/> -->
+<!-- <input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/> -->
 <input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
 
 
@@ -24,6 +24,8 @@
 <script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script> 
 <script type="text/javascript" src="http://knockoutjs.com/js/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script> 
 
+<script type="text/javascript" src="../../../lib/knockoutjs/switch-case/knockout-switch-case.js"></script>
+
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="https://jquery-json.googlecode.com/files/jquery.json-2.4.js"></script>
 <script src="../../../lib/modernizr/modernizr.js"></script>
@@ -32,11 +34,6 @@
 
 
 <script>
-/*
-var app = new App();
-app.retrieveFromStorage();
-*/
-
 var viewModel;
 $(document).ready(function(){
 
@@ -106,18 +103,32 @@ function updateView(){
         <table >
             <thead>
                 <tr>
+					<th>ID</th>
                     <th>task name</th>
                     <th>deadline</th>
                     <th />
                 </tr>
             </thead>
             <tbody data-bind='foreach: tasks'>
-                <tr>
-                    <td><input class='required' data-bind='value: name' /></td>
-                    <td><input class='required number' data-bind='value: deadline' /></td>
-                <!--    <td><a href='#' data-bind='click: function(data, event){ /*console.log(data); */console.log($root); $root.removetask};'>Delete</a></td>-->
-				<td><a class="deleteTask" href='#' data-bind='click: $root.removetask'>Delete</a></td>
 
+            	<tr >
+            		<td style="display:block"><span data-bind='text: id'></span></td>
+            	<!-- ko switch -->
+				    <!-- ko case: $data.id == $parent.currentItem().id  -->
+					    <td><input class='required' data-bind='value: name' /></td>
+	                    <td><input class='required number' data-bind='value: deadline' /></td>
+				    <!-- /ko --> <!-- ko case: $else -->
+	                    <td ><span class='required ' data-bind='text: name' />&nbsp;</span></td>
+	                    <td ><span class='required number ' data-bind='text: deadline' /></span></td>
+                    <!-- /ko -->
+            	<!-- /ko -->
+                    <!--Actions -->
+				<td><a class="deleteTask" href='#' data-bind='click: function(data,event){ $parent.removetask(data,true); };'>Delete</a></td>
+				<td><a class="editTask" href='#' data-bind='click: $root.editTask'>Edit</a></td>
+
+
+				<!-- $data is the current element:
+				http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
                 </tr>
             </tbody>
         </table>
@@ -142,6 +153,7 @@ $(document).ready(function(){
 
  viewModel = new App();
  //viewModel.addDummyData();
+ viewModel.retrieveFromStorage();
  ko.applyBindings(viewModel);
 });
 

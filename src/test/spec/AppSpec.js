@@ -1,36 +1,62 @@
 describe("App", function() {
   var app;
 
+  
   beforeEach(function() {
     app = new App();
-    expectStorageIsEmpty();
   });
 
   afterEach(function () {
     app.removeAll();
   });
 
-  it("clean storage from previous usage", function () {
-    app.removeAll();
-  })
+
+  describe("basic tests", function() {
+
+      beforeEach(function() {
+         expectStorageIsEmpty();
+      });
+
+    	it("variable app should exist", function() {
+    		expect(undefined == app).toBeFalsy();
+    	});
+
+      
+    	it("tasks should be empty", function() {
+    		expect(app.tasks()).toEqual([]);
+    	});
+
+      it("basic author", function() {
+        expect(app.author()).toEqual("me");
+      });
+  });
+
+	describe("session storage",function(){
+    it("clear it", function() {
+      add1Task();
+      clearTasksAndStorage();
+    });
+
+    it("save to it", function () {
+      expectStorageIsEmpty();
+      add1Task();
+      expectStorageIsNotEmpty(1);
+      add1Task();
+      expectStorageIsNotEmpty(2);
+      add1Task();
+      expectStorageIsNotEmpty(3);
+    });
 
 
-	it("variable app should exist", function() {
-		expect(undefined == app).toBeFalsy();
-	});
-  
-	it("tasks should be empty", function() {
-		expect(app.tasks()).toEqual([]);
-	});
-  
-	it("basic author", function() {
-		expect(app.author()).toEqual("me");
-	});
+    localStorage.clear();
+    it("starting for first time", function(){
+      add1Task();
+      expectStorageIsNotEmpty(1);
+    });
 
-	it("clear session storage", function() {
-    add1Task();
-    clearTasksAndStorage();
-	});
+  });
+
+
 
   function clearTasksAndStorage () {
     app.removeAll();
@@ -38,33 +64,29 @@ describe("App", function() {
     expectStorageIsEmpty();
   }
 
-  it("save to session storage", function () {
-    expectStorageIsEmpty();
-    add1Task();
-    expectStorageIsNotEmpty(1);
-    add1Task();
-    expectStorageIsNotEmpty(2);
-    add1Task();
-    expectStorageIsNotEmpty(3);
-  }); 
+
 
   function expectStorageIsEmpty(){
 
     var a=app.loadFromSession(app.storageName);
-    console.log("expectStorageIsEmptyOrLikeNew "+a);
-    expect(a==null || a==ko.toJSON(new App())).toBe(true);
+    //console.log("expectStorageIsEmptyOrLikeNew "+a);
+    var app2 = new App();
+    app2 = app2.copyFrom(a);
+    //console.log("expectStorageIsEmptyOrLikeNew => ");
+    //console.log(app2.tasks());
+    expect(a==null || app2.tasks().length==0 ).toBe(true);
   }
 
   function expectStorageIsNotEmpty(taskSize){
     var appString = app.loadFromSession(app.storageName);
-    console.log("appstring = "+appString);
+    //console.log("appstring = "+appString);
     expect(appString).not.toBe(null);
     expect(appString).not.toBe(undefined);
 
     if(undefined != taskSize){
         var storageApp = app.copyFrom(appString);
-        console.log(storageApp);
-        console.log(taskSize);
+        //console.log(storageApp);
+        //console.log(taskSize);
         expect(storageApp.tasks().length).toBe(taskSize);
     }
   }
