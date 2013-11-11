@@ -3,6 +3,10 @@ var Task = function(name,deadline,id){
 	this.update(name,deadline,id);
 };
 
+Task.prototype.updateFrom = function(task) {
+	this.update(task.name,task.deadline,task.id);
+};
+
 Task.prototype.update = function(name,deadline,id) {
 	this.name= name||"";
 	this.deadline= deadline||"";
@@ -150,7 +154,15 @@ var App = function() {
 				}
 			}
 
-			self.tasks(newApp.tasks);
+			//convert objects to tasks
+			var newTasks = [];
+			$.each(newApp.tasks,function(index,task){
+				var newTask = new Task();
+				newTask.updateFrom(task);
+				newTasks.push(newTask);
+			});
+
+			self.tasks(newTasks);
 			self.idCounter = newApp.idCounter;
 		}
 		return self;
