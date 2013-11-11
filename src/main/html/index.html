@@ -75,11 +75,19 @@
             	<!-- ko switch -->
 
 				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
-					    <td><input class='inlined required' data-bind='value: name' /></td>
-	                    <td><input class='inlined required number' data-bind='value: deadline' /></td>
+					    <td><input class='inlined required' data-bind='value: name' onkeypress="
+								if(isEnter(event,true)){
+						    		$('#commitTask')[0].click();
+						    	}
+					    	" /></td>
+	                    <td><input class='inlined required number' data-bind='value: deadline' onkeypress="
+								if(isEnter(event,true)){
+						    		$('#commitTask')[0].click();
+						    	}
+					    	" /></td>
 
-						<td><a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes"></a></td>
-	                    <td><a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes"></a></td>
+						<td><a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" ></a></td>
+	                    <td><a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ></a></td>
 				    <!-- /ko --> <!-- ko case: $else -->
 	                    <td ><span class='required ' data-bind='text: name' /></span></td>
 	                    <td ><span class='required number ' data-bind='text: deadline' /></span>
