@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <body>
 
@@ -20,26 +21,30 @@
 
 <script type="text/javascript" src="../../../lib/knockoutjs/switch-case/knockout-switch-case.js"></script>
 
+<link href="../../../lib/bootstrap-3.0.2/css/bootstrap.css" rel="stylesheet"/> 
+<link href="../../../lib/bootstrap-3.0.2/css/bootstrap-theme.css" rel="stylesheet"/> 
+
 <script src="../../../lib/jquery-2.0.3/jquery-2.0.3.min.js"></script>
 <script src="../../../lib/jquery-2.0.3/jquery.json-2.4.js"></script>
 <script src="../../../lib/modernizr/modernizr.js"></script>
 <script src="../js/common-functions.js"></script>
 <script src="../js/App.js"></script>
+<script type="text/javascript" src="../../../lib/bootstrap-3.0.2/js/bootstrap.js"></script>
 <!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
 <link href="../styles/tango32.css" rel="stylesheet"/>
 
 
 
 
-<div class='liveExample'> 
+<div class='liveExample' class="container-fluid separate-rows tall-rows"> 
 
 	<div>
 	<!-- ko switch -->
-		<div data-bind="case.visible: !$root.newTask()">
+		<div data-bind="case.visible: !$root.newTask()" class="row-fluid">
 			<a class="action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task"></a>
 		</div>
 
-		<div data-bind="case.visible: $else">
+		<div data-bind="case.visible: $else" class="row-fluid">
 			<input type="text" id="taskName"
 				 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
 				 onchange="console.log('changed name. now = '+$(this).val());"
@@ -55,58 +60,60 @@
 
 	
     
-    <form >
-        <p>You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</p>
+    <form class="form-vertical">
+
+        <div class="row-fluid">You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</div>
         
-        <table >
-            <thead>
-                <tr>
-					<th>ID</th>
-                    <th>task name</th>
-                    <th>deadline</th>
-                    <th />
-                </tr>
-            </thead>
-            <tbody data-bind='foreach: tasks'>
+        <div class="row-fluid">
+				ID
+                task name
+                deadline
+        </div>
+        <div data-bind='foreach: tasks'>
+        	<div class="row">
+        		<div class="col-xs-0 col-md-1 " data-bind='text: id'></div>
+        	<!-- ko switch -->
+			    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
+				    <div class="col-xs-12 col-md-4"><input class='inlined required' data-bind='value: name' onkeypress="
+							if(isEnter(event,true)){
+					    		$('#commitTask')[0].click();
+					    	}
+				    	" /></div>
+                    <div class="col-xs-12 col-md-2"><input class='inlined required number' data-bind='value: deadline' onkeypress="
+							if(isEnter(event,true)){
+					    		$('#commitTask')[0].click();
+					    	}
+				    	" /></div>
 
-            	<tr >
-            		<td style="display:block"><span data-bind='text: id'></span></td>
+					<div class="col-xs-12 col-md-3">
+					  <a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" ></a>
+                      <a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ></a>
+                    </div>
+                    <div class="col-md-1">&nbsp;</div>
+			    <!-- /ko --> <!-- ko case: $else -->
+			    	<div class="col-xs-9 col-md-4">
+                      <span class='required ' data-bind='text: name' /></span>
+                	</div>
+			    	<div class="col-xs-6 col-md-2">
+                      <span class='required number ' data-bind='text: deadline' /></span>
+                    </div>
+			    	<div class="col-xs-6 col-md-2">
+	                  <a class="action editTask" href='#' data-bind='click: $root.editTask' title="Edit task"></a>
+	                  <a class="action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task"></a>
+                	</div>
 
-            	<!-- ko switch -->
-
-				    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
-					    <td><input class='inlined required' data-bind='value: name' onkeypress="
-								if(isEnter(event,true)){
-						    		$('#commitTask')[0].click();
-						    	}
-					    	" /></td>
-	                    <td><input class='inlined required number' data-bind='value: deadline' onkeypress="
-								if(isEnter(event,true)){
-						    		$('#commitTask')[0].click();
-						    	}
-					    	" /></td>
-
-						<td><a id="rollbackTask" class="action rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" ></a></td>
-	                    <td><a id="commitTask"   class="action commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ></a></td>
-				    <!-- /ko --> <!-- ko case: $else -->
-	                    <td ><span class='required ' data-bind='text: name' /></span></td>
-	                    <td ><span class='required number ' data-bind='text: deadline' /></span>
-	                    </td>
-	                    <td><a class="action editTask" href='#' data-bind='click: $root.editTask' title="Edit task"></a></td>
-	                    <td><a class="action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task"></a></td>
-                    <!-- /ko -->
-            	<!-- /ko -->
-
-				<!-- $data is the current element:
-				http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
-                </tr>
-            </tbody>
-        </table>
+                <!-- /ko -->
+        	<!-- /ko -->
+        </div>
+			<!-- $data is the current element:
+			http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
+		</div>
+</div>
      
         
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
     </form>
-    <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre>
+    <!-- <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre> -->
     
 </div>
 
@@ -118,7 +125,9 @@ $(document).ready(function(){
  viewModel = new App();
  //viewModel.addDummyData();
  ko.applyBindings(viewModel);
- viewModel.retrieveFromServer();
+ // viewModel.retrieveFromServer();
+ viewModel.retrieveFromStorage();
+
 
  $('input.new').on('keypress',function(event){
  	if(isEnter(event,true)){
