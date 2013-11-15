@@ -117,8 +117,8 @@ $(document).ready(function(){
 
  viewModel = new App();
  //viewModel.addDummyData();
- viewModel.retrieveFromStorage();
  ko.applyBindings(viewModel);
+ viewModel.retrieveFromServer();
 
  $('input.new').on('keypress',function(event){
  	if(isEnter(event,true)){
