@@ -3,6 +3,10 @@ var Task = function(name,deadline,id){
 	this.update(name,deadline,id);
 };
 
+Task.prototype.updateFrom = function(task) {
+	this.update(task.name,task.deadline,task.id);
+};
+
 Task.prototype.update = function(name,deadline,id) {
 	this.name= name||"";
 	this.deadline= deadline||"";
@@ -11,7 +15,8 @@ Task.prototype.update = function(name,deadline,id) {
 
 var CONFIG = (function(){
 	var privateVars = {
-		'STORAGE_NAME':'content',
+		'STORAGE_NAME': 'content',
+		'STORAGE_SERVER': 'http://82.98.168.17/todotwist/backend/tt.php',
 	};
 
 	return {
@@ -149,7 +154,15 @@ var App = function() {
 				}
 			}
 
-			self.tasks(newApp.tasks);
+			//convert objects to tasks
+			var newTasks = [];
+			$.each(newApp.tasks,function(index,task){
+				var newTask = new Task();
+				newTask.updateFrom(task);
+				newTasks.push(newTask);
+			});
+
+			self.tasks(newTasks);
 			self.idCounter = newApp.idCounter;
 		}
 		return self;
@@ -212,6 +225,34 @@ App.prototype.addDummyData =function(){
 	this.currentItem(null);
 };
 
+
+
+App.prototype.saveToServer =function(){
+	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
+		 {
+		 	user:"a",
+		 	token:'123',
+		 	action:'save',
+		 	app_contents:ko.toJSON(self)
+		 }).always(function(data){
+		 	alert("Save OK");
+		 });
+};
+
+App.prototype.retrieveFromServer = function(){
+	var self = this;
+	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
+		 {
+		 	user:"a",
+		 	token:'123',
+		 	action:'load',
+		 }).done(function(data){
+		 		var dataString=ko.toJSON(data);
+		 		console.log(dataString);
+				self = self.copyFrom(dataString);
+		}).always(function(data){ console.log("back from retrieveFromServer")});
+};
+
 /*
 var AppModel = function(app) {
     var self = this;
@@ -241,7 +282,7 @@ var AppModel = function(app) {
  
 
 
-Object.prototype.clone = function() {
+Task.prototype.clone = function() {
   if(this.cloneNode) return this.cloneNode(true);
   var copy = this instanceof Array ? [] : {};
   for(var attr in this) {
