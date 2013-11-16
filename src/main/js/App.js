@@ -221,8 +221,8 @@ App.prototype.clearStorage = function(){
 }
 
 App.prototype.addDummyData =function(){
-	this.add(new Task("task 1","today"));
-	this.currentItem(null);
+	this.currentItem(new Task("task 1","today"));
+	this.add();
 };
 
 
