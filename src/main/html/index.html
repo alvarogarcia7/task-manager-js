@@ -1,27 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
 
-
-
-<div name="actions" class="row-fluid">
-	<button id="removedAll" name="removedAll" title="clear tasks" onclick="viewModel.removeAll();" class="btn">
-		<i class="icon-large icon-cleaning"></i> Clear tasks 
-	</button>
-	<input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/>
-	<button class="btn" type="button" onclick="javascript:console.log(viewModel.tasks());">
-		<i class="icon-large icon-eye-open"></i> View tasks in console.log
-	</button>
-	<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
-		<i class="icon-large icon-inbox-in"></i>Retrieve from server
-	</button>
-	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
-		<i class="icon-large icon-inbox-out"></i>Save to server
-	</button>
-</div>
-
-
+<head>
 <script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
 <script type="text/javascript" src="../../../lib/cufon-yui.js"></script>
 <script type="text/javascript" src="../../../lib/titilliummaps.font.js"></script>
@@ -42,63 +23,94 @@
 <script type="text/javascript" src="../../../lib/bootstrap-3.0.2/js/bootstrap.js"></script>
 <!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
 <link href="../styles/tango32.css" rel="stylesheet"/>
-
-
-
-
-<div class="liveExample container-fluid  separate-rows"> 
-
-	<div  class="row-fluid">
-		<div class="span4">
+<link href="../styles/test-bootstrap1.css" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+       <div class="container Override">
+        <div class="row">
+            <div class="col-md-12">
+			
+			
+			<div name="actions" class="row-fluid">
+	<button id="removedAll" name="removedAll" title="clear tasks" onclick="viewModel.removeAll();" class="btn">
+		<i class="icon-large icon-cleaning"></i> Clear tasks 
+	</button>
+	<input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/>
+	<button class="btn" type="button" onclick="javascript:console.log(viewModel.tasks());">
+		<i class="icon-large icon-eye-open"></i> View tasks in console.log
+	</button>
+	<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
+		<i class="icon-large icon-inbox-in"></i>Retrieve from server
+	</button>
+	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
+		<i class="icon-large icon-inbox-out"></i>Save to server
+	</button>
+</div>
+			
+			
+			</div>
+        </div>
+        <div class="row" style="display:none;">
+            <div class="col-md-12">header section</div>
+        </div>
+        <div class="row fill">
+            <div class="wrapper">
+                <div class="col-md-3 float-left static">
 		<!-- ko switch -->
-			<div data-bind="case.visible: !$root.newTask()" class="col-md-12">
+			<div data-bind="case.visible: !$root.newTask()" class="row">
 				<button class="btn action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task">
 					<i class="icon-large icon-asterisk"></i>Add task
 				</button>
 			</div>
 
-			<div data-bind="case.visible: $else" class="row-fluid">
-				<div class="col-md-4">
-				<input type="text" id="taskName"
-					 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
-					 onchange="console.log('changed name. now = '+$(this).val());"
-					 value="tarea dificil" class="new" />
-				<input type="text" id="taskDate"
-					data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
-					value="el año que viene"  class="new" />
+			<div data-bind="case.visible: $else" class="row">
+				<div class="row"> &nbsp; </div>
+				<div class="row-fluid">
+					<div class="col-md-12">
+						<input type="text" id="taskName"
+							 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
+							 onchange="console.log('changed name. now = '+$(this).val());"
+							 value="tarea dificil" class="new" />
+						<input type="text" id="taskDate"
+							data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
+							value="el año que viene"  class="new" />
+					</div>
 				</div>	
-				<div class="span4">
-					<!-- http://marcoceppi.github.io/bootstrap-glyphicons/ -->
-					<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
-					<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
+				<div class="row-fluid">
+					<div class="col-md-12">
+						<!-- http://marcoceppi.github.io/bootstrap-glyphicons/ -->
+						<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
+						<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
+					</div>
 				</div>
 			</div>
 		<!-- /ko -->
-		</div>
-
-	
-    
-    <form class="span8">
-
-        <div class="row-fluid">You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</div>
+	</div>
+		<div class="col-md-9">
+			
+    <form class="row">
+        
+        <div class="row-fluid">
+        	You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)
+        </div>
         
         <div class="row-fluid">
 				<!-- ID -->
                  <div class="col-xs-12 col-md-4">task name</div>
-                 <div class="col-xs-12 col-md-2">deadline</div>
-                 <div class="col-xs-12 col-md-6">&nbsp;</div>
+                 <div class="col-xs-12 col-md-8">deadline</div>
         </div>
         <div data-bind='foreach: tasks' class="container-fluid">
         	<div class="row-fluid">
         		<!-- <div class="col-xs-0 col-md-1 " data-bind='text: id'></div> -->
         	<!-- ko switch -->
 			    <!-- ko case: $parent.currentItem()  && $data.id == $parent.currentItem().id  -->
-				    <div class="col-xs-12 col-md-4"><input class='inlined required' data-bind='value: name' onkeypress="
+				    <div class="col-xs-12 col-md-4"><input class='inlined required' data-bind='value: name' size="35%" onkeypress="
 							if(isEnter(event,true)){
 					    		$('#commitTask')[0].click();
 					    	}
 				    	" /></div>
-                    <div class="col-xs-12 col-md-2"><input class='inlined required number' data-bind='value: deadline' onkeypress="
+                    <div class="col-xs-12 col-md-2"><input class='inlined required number' data-bind='value: deadline'  size="10%" onkeypress="
 							if(isEnter(event,true)){
 					    		$('#commitTask')[0].click();
 					    	}
@@ -106,13 +118,12 @@
 
 					<div class="col-xs-12 col-md-4">
 					  <button id="rollbackTask" class="action btn rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" >
-					  	<i class="icon-large icon-remove-sign"></i>Discard changes
+					  	<i class="icon-large icon-unshare"></i><!-- Discard changes -->
 					  </button>
                       <button id="commitTask" class="action btn commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" >
-                      	<i class="icon-large icon-ok-sign"></i>Save changes
+                      	<i class="icon-large icon-ok-sign"></i><!-- Save changes -->
 					  </button>
                     </div>
-                    <div class="col-md-1">&nbsp;</div>
 			    <!-- /ko --> <!-- ko case: $else -->
 			    	<div class="col-xs-6 col-md-4">
                       <span class='required ' data-bind='text: name' /></span>
@@ -122,10 +133,10 @@
                     </div>
 			    	<div class="col-xs-12 col-md-4">
 	                  <button class="btn editTask" href='#' data-bind='click: $root.editTask' title="Edit task">
-	                  	<i class="icon-large icon-pencil"></i> Edit task
+	                  	<i class="icon-large icon-pencil"></i><!--  Edit task -->
 	                  </button>
 	                  <button class="btn action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task">
-	                  	<i class="icon-large  icon-trash"></i>Remove task
+	                  	<i class="icon-large  icon-trash"></i><!-- Remove task -->
 	                  </button>
                 	</div>
 
@@ -135,9 +146,25 @@
         	</div>
 			<!-- $data is the current element:
 			http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
-		</div>
+     	</div>
+
+
      	</form>
-        
+     	
+     	<!-- <div class="wrapper">
+     		<div class="row">
+     	 <p>Content</p>
+     	</div>
+     		<div class="row">
+
+     	 <p>Content</p>
+     	</div> -->
+     	</div>
+		</div>
+		</div>
+		     </div>
+	</div>
+        	</div>
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
 
     <!-- <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre> -->
