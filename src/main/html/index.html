@@ -24,6 +24,7 @@
 <!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
 <link href="../styles/tango32.css" rel="stylesheet"/>
 <link href="../styles/test-bootstrap1.css" rel="stylesheet"/>
+<link href="../styles/basic.css" rel="stylesheet"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -120,11 +121,11 @@
                       <button id="commitTask" class="action btn commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ><i class="icon-large icon-ok-sign"></i><!-- Save changes --></button>
                     </div>
 			    <!-- /ko --> <!-- ko case: $else -->
-			    	<div class="col-xs-6 col-md-4">
+			    	<div class="col-xs-6 col-md-4" data-bind='css: { taskDone: $data.done }'>
 						<input type="checkbox" data-bind='checked: done' /></span>
 						<span class='required ' data-bind='text: name' /></span>
 						</div>
-			    	<div class="col-xs-6 col-md-2"><span class='required number ' data-bind='text: deadline' /></span></div>
+			    	<div class="col-xs-6 col-md-2" data-bind='css: { taskDone: $data.done }'><span class='required number ' data-bind='text: deadline' /></span></div>
 			    	<div class="col-xs-12 col-md-4">
 			    		<button class="btn editTask" href='#' data-bind='click: $root.editTask' title="Edit task"><i class="icon-large icon-pencil"></i><!--  Edit task --></button>
 	                  	<button class="btn action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task"><i class="icon-large  icon-trash"></i><!-- Remove task --></button>
