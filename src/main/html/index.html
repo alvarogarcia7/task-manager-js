@@ -6,12 +6,19 @@
 <div>
 
 
-<input type="button" id="removedAll" name="removedAll" value="clear tasks" onclick="viewModel.removeAll()";/>
+<button id="removedAll" name="removedAll" title="clear tasks" onclick="viewModel.removeAll();" class="btn">
+	<i class="icon-large icon-cleaning"></i> Clear tasks 
+</button>
 <!-- <input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/> -->
-<input type="button" onclick="javascript:console.log(viewModel.tasks());" value="View tasks in console.log"/>
-<input type="button" onclick="javascript:viewModel.retrieveFromServer();" value="Retrieve from server"/>
-<input type="button" onclick="javascript:viewModel.saveToServer();" value="Save to server"/>
-
+<button class="btn" type="button" onclick="javascript:console.log(viewModel.tasks());">
+	<i class="icon-large icon-eye-open"></i> View tasks in console.log
+</button>
+<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
+	<i class="icon-large icon-inbox-in"></i>Retrieve from server
+</button>
+<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
+	<i class="icon-large icon-inbox-out"></i>Save to server
+</button>
 
 
 <script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
@@ -116,7 +123,7 @@
 	                  	<i class="icon-large icon-pencil"></i> Edit task
 	                  </button>
 	                  <button class="btn action deleteTask" href='#' data-bind='click: function(data,event){ $parent.removeTask(data,true); };' title="Delete task">
-	                  	<i class="icon-large  icon-remove"></i>Remove task
+	                  	<i class="icon-large  icon-trash"></i>Remove task
 	                  </button>
                 	</div>
 
