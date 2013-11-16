@@ -58,17 +58,10 @@
             <div class="wrapper">
                 <div class="col-md-4 float-left static">
                    <p>Content</p><p>Content</p>
-                </div>
+           
 				
-				<div class="col-md-8 static">
-
-
-<div class="liveExample container  separate-rows"> 
-
-	<div  class="row-fluid">
-		<div class="span4">
 		<!-- ko switch -->
-			<div data-bind="case.visible: !$root.newTask()" class="col-md-12">
+			<div data-bind="case.visible: !$root.newTask()" class="col-md-4">
 				<button class="btn action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task">
 					<i class="icon-large icon-asterisk"></i>Add task
 				</button>
@@ -84,7 +77,7 @@
 					data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
 					value="el año que viene"  class="new" />
 				</div>	
-				<div class="span4">
+				<div class="col-md-4">
 					<!-- http://marcoceppi.github.io/bootstrap-glyphicons/ -->
 					<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
 					<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
@@ -92,7 +85,11 @@
 			</div>
 		<!-- /ko -->
 		</div>
+		     </div>
+	</div>
+<div class="liveExample container  separate-rows"> 
 
+	<div  class="row-fluid">
 
     
     <form class="span8">
