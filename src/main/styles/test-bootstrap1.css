@@ -24,8 +24,6 @@ html, body, .Override.container, .Override .col-md-4, .Override .col-md-8, .Over
 
 .Override .fill
 {
-    color: #efefef;
-    background-color: blue;
     position: relative;
 }
     .Override .fill:after
@@ -42,21 +40,14 @@ html, body, .Override.container, .Override .col-md-4, .Override .col-md-8, .Over
     height: 100%;
 }
 
-.Override .col-md-12
-{
-    background-color: red;
-}
-
 .Override .float-left
 {
     float: left;
     position: static;
-    background-color: yellow;
 }
 
 .Override .static
 {
     position: static;
-    background-color: green;
     overflow: auto;
 }
