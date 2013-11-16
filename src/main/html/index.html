@@ -120,8 +120,14 @@
 					  <button id="rollbackTask" class="action btn rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" ><i class="icon-large icon-unshare"></i><!-- Discard changes --></button>
                       <button id="commitTask" class="action btn commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ><i class="icon-large icon-ok-sign"></i><!-- Save changes --></button>
                     </div>
-			    <!-- /ko --> <!-- ko case: $else -->
+			    <!-- /ko --> <!-- ko case: $else && $data.done -->
 			    	<div class="col-xs-6 col-md-4" data-bind='css: { taskDone: $data.done }'>
+						<input type="checkbox" data-bind='checked: done' /></span>
+						<span class='required ' data-bind='text: name' /></span>
+						</div>
+			    	<div class="col-xs-6 col-md-8" data-bind='css: { taskDone: $data.done }'><span class='required number ' data-bind='text: deadline' /></span></div>
+                <!-- /ko --> <!-- ko case: $else -->
+                	<div class="col-xs-6 col-md-4" data-bind='css: { taskDone: $data.done }'>
 						<input type="checkbox" data-bind='checked: done' /></span>
 						<span class='required ' data-bind='text: name' /></span>
 						</div>
