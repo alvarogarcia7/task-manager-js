@@ -120,7 +120,10 @@
                       <button id="commitTask" class="action btn commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ><i class="icon-large icon-ok-sign"></i><!-- Save changes --></button>
                     </div>
 			    <!-- /ko --> <!-- ko case: $else -->
-			    	<div class="col-xs-6 col-md-4"><span class='required ' data-bind='text: name' /></span></div>
+			    	<div class="col-xs-6 col-md-4">
+						<input type="checkbox" data-bind='checked: done' /></span>
+						<span class='required ' data-bind='text: name' /></span>
+						</div>
 			    	<div class="col-xs-6 col-md-2"><span class='required number ' data-bind='text: deadline' /></span></div>
 			    	<div class="col-xs-12 col-md-4">
 			    		<button class="btn editTask" href='#' data-bind='click: $root.editTask' title="Edit task"><i class="icon-large icon-pencil"></i><!--  Edit task --></button>
@@ -150,7 +153,7 @@
         	</div>
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
 
-    <!-- <pre><span data-bind='text: $.toJSON(tasks(), null, 2)'>&nbsp;</span></pre> -->
+    <pre><span data-bind='text: ko.toJSON(tasks(), null, 2)'>&nbsp;</span></pre> 
     
 </div>
 
