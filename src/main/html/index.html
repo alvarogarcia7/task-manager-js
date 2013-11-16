@@ -121,12 +121,12 @@
                       <button id="commitTask" class="action btn commitEditTask"   href='#' data-bind='click:$root.commitTask;' title="Save changes" ><i class="icon-large icon-ok-sign"></i><!-- Save changes --></button>
                     </div>
                 <!-- /ko --> <!-- ko case: !isSameItem($parent.currentItem(),$data) && isDone($data,1) -->
-                	<div class="col-xs-4 col-md-4 col-ld-4" data-bind='css: { taskDone: $data.done }'>
+                	<div class="col-xs-4 col-md-4 col-ld-4">
 						<input type="checkbox" data-bind='checked: done' /></span>
-						<span class='required ' data-bind='text: name' /></span>
+						<span class='required ' data-bind='css: { taskDone: $data.done }, text: name' /></span>
 						</div>
-			    	<div class="col-xs-8 col-md-4 col-ld-8" data-bind='css: { taskDone: $data.done }'>
-			    		<span class='required number ' data-bind='text: deadline' /></span>
+			    	<div class="col-xs-8 col-md-4 col-ld-8">
+			    		<span class='required number ' data-bind=' css: { taskDone: $data.done } ,text: deadline' /></span>
 			    	</div>
 			    	<div class="col-xs-8 col-md-8 col-ld-8" > &nbsp; </div>
 
