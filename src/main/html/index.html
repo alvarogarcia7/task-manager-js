@@ -16,6 +16,7 @@
 <!-- https://raw.github.com/marcoceppi/bootstrap-glyphicons/master/css/bootstrap.icon-large.css -->
 <link href="../../../lib/bootstrap-3.0.2/css/bootstrap.icon-large.css" rel="stylesheet"/> 
 
+<script src="../../../lib/security/sha1-min.js"></script>
 
 
 <script src="../../../lib/jquery-2.0.3/jquery-2.0.3.min.js"></script>
@@ -53,7 +54,9 @@
 
 
 
-	<button class="btn" data-bind="popover: {template: 'popoverBindingTemplate', title: 'Settings',placement:'bottom', trigger:'focus'}">
+<!-- http://stackoverflow.com/questions/11268863/knockoutjs-unable-to-parse-bindings-in-plugin-using-ko-rendertemplate -->
+	<span data-binding="text: passwd"></span>
+	<button class="btn" data-bind="popover: {template: 'popoverBindingTemplate', title: 'Settings',placement:'bottom'/*, trigger:'focus' */}">
 		<i class="icon-large icon-settings"></i>
 	</button>
  
@@ -63,7 +66,7 @@
         <label>Username</label>
         <input type="text" data-bind="value: username, valueUpdate:'afterkeydown'" />
         <label>Password</label>
-        <input type="password" data-bind="value: passwd, valueUpdate:'afterkeydown'" />
+        <input type="password" data-bind="value: passwd, valueUpdate:'afterkeydown', event: {change: $root.createToken} "/>
     </form>
 </script>
 			

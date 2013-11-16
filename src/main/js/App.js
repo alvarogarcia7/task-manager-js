@@ -41,7 +41,7 @@ var App = function() {
 
 	this.cache = ko.observable(null);
 
-	this.username = ko.observable(null);
+	this.username = ko.observable('a');
 	this.passwd = ko.observable(null);
 	//!cache means editingInline
 	
@@ -228,13 +228,19 @@ App.prototype.addDummyData =function(){
 	this.add();
 };
 
+App.prototype.createToken = function() {
+	var clearPassword = this.passwd();
+	var codedPassword = hex_sha1(clearPassword);
+	this.passwd(codedPassword);
+};
+
 
 
 App.prototype.saveToServer =function(){
 	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
 		 {
-		 	user:"a",
-		 	token:'123',
+		 	user:this.username(),
+		 	token: this.passwd(),
 		 	action:'save',
 		 	app_contents:ko.toJSON(self)
 		 }).always(function(data){
@@ -246,8 +252,8 @@ App.prototype.retrieveFromServer = function(){
 	var self = this;
 	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
 		 {
-		 	user:"a",
-		 	token:'123',
+		 	user: this.username(),
+		 	token:this.passwd(),
 		 	action:'load',
 		 }).done(function(data){
 		 		var dataString=ko.toJSON(data);
