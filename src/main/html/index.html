@@ -57,17 +57,14 @@
         <div class="row fill">
             <div class="wrapper">
                 <div class="col-md-4 float-left static">
-                   <p>Content</p><p>Content</p>
-           
-				
 		<!-- ko switch -->
-			<div data-bind="case.visible: !$root.newTask()" class="col-md-4">
+			<div data-bind="case.visible: !$root.newTask()" class="row">
 				<button class="btn action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task">
 					<i class="icon-large icon-asterisk"></i>Add task
 				</button>
 			</div>
 
-			<div data-bind="case.visible: $else" class="row-fluid">
+			<div data-bind="case.visible: $else" class="row">
 				<div class="col-md-4">
 				<input type="text" id="taskName"
 					 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
@@ -82,8 +79,17 @@
 					<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
 					<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
 				</div>
+
+				<div class="col-md-4"> &nbsp; </div>
 			</div>
 		<!-- /ko -->
+		<div class="row static">
+			<div class="col-md-12"> 
+				&nbsp; 
+		 <p>Content</p><p>Content</p>
+			</div>
+
+		</div>
 		</div>
 		     </div>
 	</div>
