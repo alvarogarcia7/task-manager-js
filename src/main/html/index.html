@@ -1,27 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
 
-
-
-<div name="actions" class="row-fluid">
-	<button id="removedAll" name="removedAll" title="clear tasks" onclick="viewModel.removeAll();" class="btn">
-		<i class="icon-large icon-cleaning"></i> Clear tasks 
-	</button>
-	<input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/>
-	<button class="btn" type="button" onclick="javascript:console.log(viewModel.tasks());">
-		<i class="icon-large icon-eye-open"></i> View tasks in console.log
-	</button>
-	<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
-		<i class="icon-large icon-inbox-in"></i>Retrieve from server
-	</button>
-	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
-		<i class="icon-large icon-inbox-out"></i>Save to server
-	</button>
-</div>
-
-
+<head>
 <script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
 <script type="text/javascript" src="../../../lib/cufon-yui.js"></script>
 <script type="text/javascript" src="../../../lib/titilliummaps.font.js"></script>
@@ -42,8 +23,41 @@
 <script type="text/javascript" src="../../../lib/bootstrap-3.0.2/js/bootstrap.js"></script>
 <!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
 <link href="../styles/tango32.css" rel="stylesheet"/>
+<link href="../styles/test-bootstrap1.css" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
+<body>
 
+ <div class="container Override">
+        <div class="row">
+            <div class="col-md-12">
+			
+			
+			<div name="actions" class="row-fluid">
+	<button id="removedAll" name="removedAll" title="clear tasks" onclick="viewModel.removeAll();" class="btn">
+		<i class="icon-large icon-cleaning"></i> Clear tasks 
+	</button>
+	<input type="button" onclick="localStorage.clear();;" value="Clear all localStorage"/>
+	<button class="btn" type="button" onclick="javascript:console.log(viewModel.tasks());">
+		<i class="icon-large icon-eye-open"></i> View tasks in console.log
+	</button>
+	<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
+		<i class="icon-large icon-inbox-in"></i>Retrieve from server
+	</button>
+	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
+		<i class="icon-large icon-inbox-out"></i>Save to server
+	</button>
+</div>
+			<div class="row-fluid">You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</div>
+			
+			</div>
+        </div>
+        <div class="row" style="display:none;">
+            <div class="col-md-12">header section</div>
+        </div>
+        <div class="row fill">
+            <div class="wrapper">
 
 
 <div class="liveExample container-fluid  separate-rows"> 
@@ -80,7 +94,7 @@
     
     <form class="span8">
 
-        <div class="row-fluid">You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)</div>
+        
         
         <div class="row-fluid">
 				<!-- ID -->
