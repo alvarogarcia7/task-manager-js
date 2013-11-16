@@ -40,6 +40,9 @@ var App = function() {
 	this.currentItem =ko.observable(new Task());
 
 	this.cache = ko.observable(null);
+
+	this.username = ko.observable(null);
+	this.passwd = ko.observable(null);
 	//!cache means editingInline
 	
 	self.author=ko.observable("me");
