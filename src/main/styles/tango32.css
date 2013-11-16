@@ -1,6 +1,5 @@
 a.action {
- display: block;
-    /* position: absolute; */
+     display: inline-block; 
     height: 32px;
     width: 32px;
     background-image: url('../img/tango32.png');
