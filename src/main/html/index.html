@@ -65,37 +65,33 @@
 			</div>
 
 			<div data-bind="case.visible: $else" class="row">
-				<div class="col-md-4">
-				<input type="text" id="taskName"
-					 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
-					 onchange="console.log('changed name. now = '+$(this).val());"
-					 value="tarea dificil" class="new" />
-				<input type="text" id="taskDate"
-					data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
-					value="el año que viene"  class="new" />
+				<div class="row"> &nbsp; </div>
+				<div class="row-fluid">
+					<div class="col-md-12">
+						<input type="text" id="taskName"
+							 data-bind="value: $root.currentItem().name, valueUpdate:'afterkeydown'"
+							 onchange="console.log('changed name. now = '+$(this).val());"
+							 value="tarea dificil" class="new" />
+						<input type="text" id="taskDate"
+							data-bind="value: $root.currentItem().deadline, valueUpdate:'afterkeydown'"
+							value="el año que viene"  class="new" />
+					</div>
 				</div>	
-				<div class="col-md-4">
-					<!-- http://marcoceppi.github.io/bootstrap-glyphicons/ -->
-					<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
-					<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
+				<div class="row-fluid">
+					<div class="col-md-12">
+						<!-- http://marcoceppi.github.io/bootstrap-glyphicons/ -->
+						<button class="btn" id="addButton" data-bind='click: $root.add' title="Add task"><i class="icon-large icon-plus-sign"></i> Save</button>
+						<button class="btn" data-bind='click: $root.rollbackTask' title="Cancel"><i class="action icon-large icon-remove-sign"></i>Cancel</button>
+					</div>
 				</div>
 
 				<div class="col-md-4"> &nbsp; </div>
 			</div>
 		<!-- /ko -->
-		<div class="row static">
-			<div class="col-md-12"> 
-				&nbsp; 
-		 <p>Content</p><p>Content</p>
-			</div>
-
-		</div>
-		</div>
-		     </div>
 	</div>
-<div class="liveExample container  separate-rows"> 
-
-	<div  class="row-fluid">
+		<div class="col-md-8 static">
+			<div class="col-md-12"> 
+				
 
     
     <form class="span8">
@@ -157,6 +153,14 @@
 			http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
 		</div>
      	</form>
+
+     	 <p>Content</p><p>Content</p>
+			</div>
+
+		</div>
+		</div>
+		     </div>
+	</div>
         	</div>
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
 
