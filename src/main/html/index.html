@@ -162,8 +162,8 @@ $(document).ready(function(){
  viewModel = new App();
  //viewModel.addDummyData();
  ko.applyBindings(viewModel);
- // viewModel.retrieveFromServer();
- viewModel.retrieveFromStorage();
+ viewModel.retrieveFromServer();
+ // viewModel.retrieveFromStorage();
 
 
  $('input.new').on('keypress',function(event){
