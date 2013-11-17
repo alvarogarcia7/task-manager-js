@@ -44,9 +44,10 @@ var App = function() {
 
 	this.username = ko.observable('a');
 	this.passwd = ko.observable(null);
-	//!cache means editingInline
+
+	this.dirty = ko.observable(false);
 	
-	self.author=ko.observable("me");
+	self.author = ko.observable("me");
 
 	/*
 	//Bad idea -- does not work
@@ -70,6 +71,7 @@ var App = function() {
 		self.currentItem(new Task());
 		this.newTask(false);
 		this.persist();
+		self.dirty(true);
 	};
 
 	
@@ -95,6 +97,7 @@ var App = function() {
 		self.cache(new Task());
 		self.currentItem(new Task());
 		self.newTask(true);
+		self.dirty(true);
 	};
 
 	self.commitTask = function(task){
@@ -104,6 +107,7 @@ var App = function() {
 		self.cache(null);
 		self.newTask(false);
 		self.persist();
+		self.dirty(true);
 	};
 
 	self.rollbackTask = function(task){
@@ -112,6 +116,7 @@ var App = function() {
 		self.currentItem(new Task());
 		self.cache(null);
 		self.newTask(false);
+		self.dirty(true);
 	};
 
 	 self.removeTask = function(task,persist) {
@@ -123,12 +128,14 @@ var App = function() {
 	    } else {
 	    	console.log("pasa removeTask . persist = "+persist + " es false");
 	    }
+		self.dirty(true);
     };
 
     self.editTask = function(task) {
     	self.newTask(false);
     	self.currentItem(task);
     	self.cache(task.clone());
+		self.dirty(true);
     };
 
 	self.removeAll = function(){
@@ -144,6 +151,7 @@ var App = function() {
 		//console.log(this.tasks());
 		this.persist();
 		//console.log(this.tasks());
+		self.dirty(true);
 	}
 
 	self.copyFrom = function(string) {
@@ -172,9 +180,6 @@ var App = function() {
 		return self;
 
 	};
-
-	self.retrieveFromStorage();
-
 };
 
 
@@ -237,7 +242,7 @@ App.prototype.createToken = function() {
 
 var lastXhr; ;
 
-App.prototype.saveToServer =function(){
+App.prototype.saveToServer =function(alert){
 	var self=this;
 	if(this.username() && this.passwd() && this.passwd() != null){
 		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
@@ -248,17 +253,21 @@ App.prototype.saveToServer =function(){
 			 	app_contents:ko.toJSON(self)
 			 })
 			.fail(function(data,textStatus,error){
-				self.handleAjax(data,"There was an error communicating with the server");
+				self.handleAjax(data,"ERROR","There was an error communicating with the server",alert);
+				return -2;
 			 })
 			.done(function(data,textStatus,error){
-			 	self.handleAjax(data,"Saved OK");
+			 	self.handleAjax(data,"INFO","Saved OK",alert);
+			 	self.dirty(false);
+			 	return 0;
 			 });
 	} else {
-		this.handleAlert("WARN","The username or password were not set when connecting to the server");
+		this.handleAlert("WARN","The username or password were not set when connecting to the server",alert);
+		return -1;
 	}
 };
 
-App.prototype.retrieveFromServer = function(){
+App.prototype.retrieveFromServer = function(alert){
 	var self = this;
 	if(this.username() && this.passwd() && this.passwd() != null){
 		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
@@ -268,22 +277,22 @@ App.prototype.retrieveFromServer = function(){
 			 	action:'load',
 			 })
 			.fail(function(data,textStatus,error){
-				self.handleAjax(data,"There was an error communicating with the server");
+				self.handleAjax(data,"ERROR","There was an error communicating with the server",alert);
 			})
 			.done(function(data,textStatus,error){
-		 		self.handleAjax(data,"LOAD OK");
+		 		self.handleAjax(data,"INFO", "LOAD OK",alert);
 		 		var dataString=ko.toJSON(data.payload);
 				self = self.copyFrom(dataString);
 			}).always(function(data,textStatus,error){
 				console.log("back from retrieveFromServer");
 			});
 	} else {
-		this.handleAlert("WARN","The username or password were not set when connecting to the server");
+		this.handleAlert("WARN","The username or password were not set when connecting to the server",alert);
 	}
 
 };
 
-App.prototype.handleAjax = function(xhr,messageToPrint) {
+App.prototype.handleAjax = function(xhr,debugLevel,messageToPrint,alert) {
 	lastXhr = xhr;
 	var newMessage = messageToPrint+": "+xhr.messageDescription;
 
@@ -300,12 +309,17 @@ App.prototype.handleAjax = function(xhr,messageToPrint) {
 			break;
 	}
 */
-	alert(newMessage);
-	
+	this.handleAlert(debugLevel,newMessage,alert);
 };
 
-App.prototype.handleAlert = function(level,message) {
-	alert(level+": "+message);
+App.prototype.handleAlert = function(level,message,needToAlert) {
+	var alertNew = needToAlert;
+	if(undefined == needToAlert){
+		alertNew = true;
+	}
+	if(alertNew){
+		alert(level+": "+message);
+	}
 };
 
 /*
