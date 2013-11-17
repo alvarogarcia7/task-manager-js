@@ -49,7 +49,7 @@
 	<button class="btn" onclick="javascript:viewModel.retrieveFromServer();">
 		<i class="icon-large icon-inbox-in"></i>Retrieve from server
 	</button>
-	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
+	<button class="btn" id="saveToServer" onclick="javascript:saveAll(true);">
 		<i class="icon-large icon-inbox-out"></i>Save to server
 	</button>
 
@@ -193,6 +193,31 @@
         <!-- <button  data-bind='enable: tasks().length > 0' type='submit'>Submit</button> -->
 
     <pre><span data-bind='text: ko.toJSON(tasks(), null, 2)'>&nbsp;</span></pre> 
+
+
+    <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Login to TodoTwist</h4>
+      </div>
+      <div class="modal-body">
+
+	     <button class="close pull-right" type="button" data-dismiss="popover">X</button>
+        <label>Username</label>
+        <input type="text" data-bind="value: username, valueUpdate:'afterkeydown'" />
+        <label>Password</label>
+        <input type="password" data-bind="value: passwd, valueUpdate:'afterkeydown', event: {change: $root.createToken} "/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Signup</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="viewModel.retrieveFromServer(false);">Login</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
     
 </div>
 
@@ -203,14 +228,14 @@ function isSameItem(currentItem,data){
 }
 
 function isDone(task,pasada){
-	if(1==pasada){
-		console.log("pasada="+pasada+" "+task.name+" isDone = "+task.done());	
-	} else if(2 == pasada){
-		console.log("pasada="+pasada+" "+task.name+" isFalse = "+ task.done());	
-	}
 	return task.done();
-	// return false;
 }
+
+  function saveAll(alertIfError){
+	viewModel.persist();
+	return viewModel.saveToServer(alertIfError);
+}
+
 
 $(document).ready(function(){
 
@@ -218,8 +243,30 @@ $(document).ready(function(){
  viewModel = new App();
  //viewModel.addDummyData();
  ko.applyBindings(viewModel);
- viewModel.retrieveFromServer();
+ $('#myModal').modal([]);
+ 
  // viewModel.retrieveFromStorage();
+
+ 
+/*
+function saveBeforeExit(){
+	$('#saveToServer')[0].click();
+}
+
+$(window).unload( saveBeforeExit );
+window.onbeforeunload = saveBeforeExit;
+*/
+$(window).bind('beforeunload', function(){
+	var retValue = saveAll(false);
+
+	if(viewModel.dirty()){
+		//http://stackoverflow.com/questions/7080269/javascript-before-leaving-the-page
+		return "Any changes made will be lost. Are you sure you want to leave?";
+	}
+  return retValue;
+});
+
+
 
 
  $('input.new').on('keypress',function(event){
