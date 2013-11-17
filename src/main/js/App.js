@@ -1,15 +1,16 @@
 var Task = function(name,deadline,id){
 	var self = this;
-	this.update(name,deadline,id);
+	this.update(name,deadline,id,false);
 };
 
 Task.prototype.updateFrom = function(task) {
-	this.update(task.name,task.deadline,task.id);
+	this.update(task.name,task.deadline,task.id,task.done);
 };
 
-Task.prototype.update = function(name,deadline,id) {
+Task.prototype.update = function(name,deadline,id,done) {
 	this.name= name||"";
 	this.deadline= deadline||"";
+	this.done = ko.observable(done||false);
 	this.id = id;
 };
 
