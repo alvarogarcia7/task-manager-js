@@ -40,6 +40,9 @@ var App = function() {
 	this.currentItem =ko.observable(new Task());
 
 	this.cache = ko.observable(null);
+
+	this.username = ko.observable('a');
+	this.passwd = ko.observable(null);
 	//!cache means editingInline
 	
 	self.author=ko.observable("me");
@@ -225,32 +228,83 @@ App.prototype.addDummyData =function(){
 	this.add();
 };
 
+App.prototype.createToken = function() {
+	var clearPassword = this.passwd();
+	var codedPassword = hex_sha1(clearPassword);
+	this.passwd(codedPassword);
+};
 
+var lastXhr; ;
 
 App.prototype.saveToServer =function(){
-	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
-		 {
-		 	user:"a",
-		 	token:'123',
-		 	action:'save',
-		 	app_contents:ko.toJSON(self)
-		 }).always(function(data){
-		 	alert("Save OK");
-		 });
+	var self=this;
+	if(this.username() && this.passwd() && this.passwd() != null){
+		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
+			 {
+			 	user:this.username(),
+			 	token: this.passwd(),
+			 	action:'save',
+			 	app_contents:ko.toJSON(self)
+			 })
+			.fail(function(data,textStatus,error){
+				self.handleAjax(data,"There was an error communicating with the server");
+			 })
+			.done(function(data,textStatus,error){
+			 	self.handleAjax(data,"Saved OK");
+			 });
+	} else {
+		this.handleAlert("WARN","The username or password were not set when connecting to the server");
+	}
 };
 
 App.prototype.retrieveFromServer = function(){
 	var self = this;
-	$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
-		 {
-		 	user:"a",
-		 	token:'123',
-		 	action:'load',
-		 }).done(function(data){
-		 		var dataString=ko.toJSON(data);
-		 		console.log(dataString);
+	if(this.username() && this.passwd() && this.passwd() != null){
+		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
+			 {
+			 	user: this.username(),
+			 	token:this.passwd(),
+			 	action:'load',
+			 })
+			.fail(function(data,textStatus,error){
+				self.handleAjax(data,"There was an error communicating with the server");
+			})
+			.done(function(data,textStatus,error){
+		 		self.handleAjax(data,"LOAD OK");
+		 		var dataString=ko.toJSON(data.payload);
 				self = self.copyFrom(dataString);
-		}).always(function(data){ console.log("back from retrieveFromServer")});
+			}).always(function(data,textStatus,error){
+				console.log("back from retrieveFromServer");
+			});
+	} else {
+		this.handleAlert("WARN","The username or password were not set when connecting to the server");
+	}
+
+};
+
+App.prototype.handleAjax = function(xhr,messageToPrint) {
+	lastXhr = xhr;
+	var newMessage = messageToPrint+": "+xhr.messageDescription;
+
+/*
+	switch(xhr.status){
+		case 404:
+			newMessage = newMessage + xhr.state();
+			break;
+		case 'load':
+			newMessage = newMessage + xhr.success().statusText;
+			break;
+		default:
+			newMessage = newMessage + "other status";
+			break;
+	}
+*/
+	alert(newMessage);
+	
+};
+
+App.prototype.handleAlert = function(level,message) {
+	alert(level+": "+message);
 };
 
 /*

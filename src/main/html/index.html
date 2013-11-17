@@ -4,6 +4,7 @@
 
 <head>
 <script type="text/javascript" src="../../../lib/knockoutjs/knockout-3.0.0.debug.js"></script>
+
 <script type="text/javascript" src="../../../lib/cufon-yui.js"></script>
 <script type="text/javascript" src="../../../lib/titilliummaps.font.js"></script>
 <script type="text/javascript" src="../../../lib/knockoutjs/json2.js"></script>
@@ -15,12 +16,16 @@
 <!-- https://raw.github.com/marcoceppi/bootstrap-glyphicons/master/css/bootstrap.icon-large.css -->
 <link href="../../../lib/bootstrap-3.0.2/css/bootstrap.icon-large.css" rel="stylesheet"/> 
 
+<script src="../../../lib/security/sha1-min.js"></script>
+
+
 <script src="../../../lib/jquery-2.0.3/jquery-2.0.3.min.js"></script>
 <script src="../../../lib/jquery-2.0.3/jquery.json-2.4.js"></script>
 <script src="../../../lib/modernizr/modernizr.js"></script>
 <script src="../js/common-functions.js"></script>
 <script src="../js/App.js"></script>
 <script type="text/javascript" src="../../../lib/bootstrap-3.0.2/js/bootstrap.js"></script>
+<script type="text/javascript" src="../../../lib/knockoutjs/knockout-bootstrap.min.js"></script>
 <!-- <link href="http://www.jsviews.com/samples/samples.css" rel="stylesheet"/> -->
 <link href="../styles/tango32.css" rel="stylesheet"/>
 <link href="../styles/test-bootstrap1.css" rel="stylesheet"/>
@@ -46,19 +51,34 @@
 	<button class="btn" onclick="javascript:viewModel.persist();viewModel.saveToServer();">
 		<i class="icon-large icon-inbox-out"></i>Save to server
 	</button>
-</div>
-			
+
+
+
+<!-- http://stackoverflow.com/questions/11268863/knockoutjs-unable-to-parse-bindings-in-plugin-using-ko-rendertemplate -->
+	<span data-binding="text: passwd"></span>
+	<button class="btn" data-bind="popover: {template: 'popoverBindingTemplate', title: 'Settings',placement:'bottom'/*, trigger:'focus' */}">
+		<i class="icon-large icon-settings"></i>
+	</button>
+ 
+<script type="text/html" id="popoverBindingTemplate">
+    <button class="close pull-right" type="button" data-dismiss="popover">X</button>
+    <form>
+        <label>Username</label>
+        <input type="text" data-bind="value: username, valueUpdate:'afterkeydown'" />
+        <label>Password</label>
+        <input type="password" data-bind="value: passwd, valueUpdate:'afterkeydown', event: {change: $root.createToken} "/>
+    </form>
+</script>
 			
 			</div>
         </div>
-        <!--<div class="row-fluid" style="display:none;">
+        <div class="row-fluid" style="display:none;">
             <div class="col-md-12">header section</div>
-        </div>-->
+        </div>
         <div class="row-fluid fill">
-            <div class="wrapper">
                 <div class="col-md-3 float-left">
 					<!-- ko switch -->
-					<div data-bind="case.visible: !$root.newTask()" class="row">
+					<div data-bind="case.visible: !$root.newTask()" class="row-fluid">
 						<button class="btn action newTask" id="addNewTaskButton" data-bind='click: $root.createNewTask' title="Add new task">
 							<i class="icon-large icon-asterisk"></i>Add task
 						</button>
@@ -85,12 +105,18 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="row-fluid">
+						<p> category 1</p>
+						<p> category 1</p>
+						<p> category 1</p>
+						<p> category 1</p>
+						<p> category 1</p>
+					</div>
 		<!-- /ko -->
-	</div>
-		<div class="col-md-9">
-			
-    <form class="row">
-        
+				</div>
+		<div class="col-ld-9 col-md-8 float-left fluid">
+           		  
         <div class="row-fluid">
         	You have asked for <span data-bind='text: tasks().length'>&nbsp;</span> task(s)
         </div>
@@ -132,7 +158,6 @@
 			<!-- $data is the current element: http://knockoutjs.com/documentation/foreach-binding.html see note 1 -->
      	</div>
 
-     	</form>
      	
 
 <!--      	<div class="row-fluid">
