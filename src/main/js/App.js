@@ -238,7 +238,7 @@ var lastXhr; ;
 
 App.prototype.saveToServer =function(){
 	var self=this;
-	if(this.username() && this.passwd()){
+	if(this.username() && this.passwd() && this.passwd() != null){
 		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
 			 {
 			 	user:this.username(),
@@ -259,7 +259,7 @@ App.prototype.saveToServer =function(){
 
 App.prototype.retrieveFromServer = function(){
 	var self = this;
-	if(this.username() && this.passwd()){
+	if(this.username() && this.passwd() && this.passwd() != null){
 		$.getJSON(CONFIG.get('STORAGE_SERVER')+"?callback=?",
 			 {
 			 	user: this.username(),
