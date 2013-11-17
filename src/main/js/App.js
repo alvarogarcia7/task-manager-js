@@ -1,17 +1,22 @@
 var Task = function(name,deadline,id){
 	var self = this;
-	this.update(name,deadline,id,false);
+	this.update(name,deadline,id,false,undefined);
 };
 
 Task.prototype.updateFrom = function(task) {
-	this.update(task.name,task.deadline,task.id,task.done);
+	this.update(task.name,task.deadline,task.id,task.done,task.categories);
 };
 
-Task.prototype.update = function(name,deadline,id,done) {
+Task.prototype.update = function(name,deadline,id,done,categories) {
 	this.name= name||"";
 	this.deadline= deadline||"";
 	this.done = ko.observable(done||false);
 	this.id = id;
+	this.categories = ko.observableArray([]||categories);
+};
+
+Task.prototype.getCategory = function(name) {
+	return "@"+name;
 };
 
 var CONFIG = (function(){
@@ -43,7 +48,8 @@ var App = function() {
 	this.cache = ko.observable(null);
 
 	this.username = ko.observable('a');
-	this.passwd = ko.observable(null);
+	// this.passwd = ko.observable(null);
+	this.passwd = ko.observable('40bd001563085fc35165329ea1ff5c5ecbdbbeef');
 
 	this.dirty = ko.observable(false);
 	
