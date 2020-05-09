@@ -141,6 +141,10 @@
 					    		$('#commitTask')[0].click();
 					    	}
 				    	" /></div>
+				    <div class="col-xs-12 col-md-2" data-bind="foreach: categories()">
+				    	<input class='inlined' data-bind='value: $data'  size="10%"/>
+				    </div>
+
 
 					<div class="col-xs-12 col-md-4">
 					  <button id="rollbackTask" class="action btn rollbackEditTask" href='#' data-bind='click: $root.rollbackTask' title="Discard changes" ><i class="icon-large icon-unshare"></i><!-- Discard changes --></button>
@@ -161,6 +165,7 @@
 						<div class="row">
 							<input type="checkbox" data-bind='checked: done' /></span>
 							<span class='required ' data-bind='text: name' /></span>
+							<span class='required ' data-bind='text: categories().length' /></span>
 						</div> <div class="row">
 							<div data-bind="foreach: categories">
 								<span data-bind="text: $parent.getCategory($data)"></span>
@@ -245,6 +250,7 @@ function isDone(task,pasada){
 
 $(document).ready(function(){
 
+// var tempVM = ko.observable(new App());
 
  viewModel = new App();
  //viewModel.addDummyData();

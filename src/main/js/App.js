@@ -12,7 +12,7 @@ Task.prototype.update = function(name,deadline,id,done,categories) {
 	this.deadline= deadline||"";
 	this.done = ko.observable(done||false);
 	this.id = id;
-	this.categories = ko.observableArray([]||categories);
+	this.categories = ko.observableArray(categories||[]);
 };
 
 Task.prototype.getCategory = function(name) {
@@ -54,6 +54,19 @@ var App = function() {
 	this.dirty = ko.observable(false);
 	
 	self.author = ko.observable("me");
+
+	self.tags = ko.computed(function(){
+		var uniqueTags = [];
+		for (var i = self.tasks().length - 1; i >= 0; i--) {
+			for(var j = self.tasks()[i].categories().length - 1; j>= 0; j--){
+				var current = self.tasks()[i].categories()[j];
+				if($.inArray(current,uniqueTags) < 0){
+					uniqueTags.push(current);
+				}
+			}
+		};
+		return uniqueTags;
+	});
 
 	/*
 	//Bad idea -- does not work
